@@ -1,17 +1,47 @@
 {
   "version": 2,
-  "rewrites": [
+  "builds": [
     {
-      "source": "/v1/(.*)",
-      "destination": "/api"
+      "src": "api/index.py",
+      "use": "@vercel/python"
     },
     {
-      "source": "/metrics",
-      "destination": "/api"
+      "src": "index.html",
+      "use": "@vercel/static"
     },
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
+      "src": "style.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "script.js",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/v1/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/metrics",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/style.css",
+      "dest": "style.css"
+    },
+    {
+      "src": "/script.js",
+      "dest": "script.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "index.html"
     }
   ]
 }
