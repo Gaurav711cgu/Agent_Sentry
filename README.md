@@ -34,79 +34,78 @@ Prompt changes can cause agent trajectories to drift, resulting in tool-use fail
 
 ## System Architecture
 
-```mermaid
-graph TD
-    A[Agent Runtime Engine] -->|Executes Tool Command| B[AgentSentry Middleware]
-    B -->|Parse Command AST| C{Recursive AST Scanner}
-    C -->|Unsafe syntax or command| D[Block & Alert]
-    C -->|Safe command| E[Docker Execution Sandbox]
-    
-    A -->|LLM API Request| F[Prompt Hashing Layer]
-    F -->|Suffix-Delta Reordering| G[Aligned Prompt Cache]
-    G -->|API Invocation| H[LLM Provider]
+(Add a ```mermaid tag around the block below to render the diagram)
 
-    Directory Structure
-yaml
+    graph TD
+        A[Agent Runtime Engine] -->|Executes Tool Command| B[AgentSentry Middleware]
+        B -->|Parse Command AST| C{Recursive AST Scanner}
+        C -->|Unsafe syntax or command| D[Block & Alert]
+        C -->|Safe command| E[Docker Execution Sandbox]
+        
+        A -->|LLM API Request| F[Prompt Hashing Layer]
+        F -->|Suffix-Delta Reordering| G[Aligned Prompt Cache]
+        G -->|API Invocation| H[LLM Provider]
 
+---
 
-agentsentry/
-  ├── core/
-  │   ├── ast_parser.py     # Recursive AST command analyzer & blocker
-  │   ├── cache.py          # Suffix-delta prompt alignment & caching logic
-  │   └── replays.py        # Levenshtein trace similarity and mock-replay runner
-  ├── sandbox/
-  │   ├── docker_runtime.py # Containerized environment execution layer
-  │   └── config.json       # Sandbox CPU, Memory, and Network restrictions
-  ├── api/
-  │   └── gateway.py        # FastAPI middleware endpoints
-  ├── tests/                # Test suite for exploit payloads & caching efficiency
-  └── main.py               # Gateway entrypoint
-Getting Started
-1. Installation
+## Directory Structure
+
+(Add a ```yaml tag around the block below)
+
+    agentsentry/
+      ├── core/
+      │   ├── ast_parser.py     # Recursive AST command analyzer & blocker
+      │   ├── cache.py          # Suffix-delta prompt alignment & caching logic
+      │   └── replays.py        # Levenshtein trace similarity and mock-replay runner
+      ├── sandbox/
+      │   ├── docker_runtime.py # Containerized environment execution layer
+      │   └── config.json       # Sandbox CPU, Memory, and Network restrictions
+      ├── api/
+      │   └── gateway.py        # FastAPI middleware endpoints
+      ├── tests/                # Test suite for exploit payloads & caching efficiency
+      └── main.py               # Gateway entrypoint
+
+---
+
+## Getting Started
+
+### 1. Installation
 Clone the repository and install dependencies:
 
-bash
+    git clone https://github.com/Gaurav711cgu/Agent_Sentry.git
+    cd Agent_Sentry
+    pip install -r requirements.txt
 
-
-git clone https://github.com/Gaurav711cgu/Agent_Sentry.git
-cd Agent_Sentry
-pip install -r requirements.txt
-2. Configure Sandbox Environment
+### 2. Configure Sandbox Environment
 Ensure Docker is running, then build the sandbox execution container:
 
-bash
+    docker build -t agentsentry-sandbox ./sandbox
 
-
-docker build -t agentsentry-sandbox ./sandbox
-3. Run the Security Gateway
+### 3. Run the Security Gateway
 Launch the FastAPI gateway server:
 
-bash
+    uvicorn main:app --host 0.0.0.5 --port 8080
 
+---
 
-uvicorn main:app --host 0.0.0.5 --port 8080
-Running Security & Cache Tests
+## Running Security & Cache Tests
+
 To validate the AST interceptor against exploit payloads and evaluate cache alignment efficiency:
 
-bash
+    pytest tests/
 
+### Example Log Output:
 
-pytest tests/
-Example Log Output:
-text
+    [AST WARNING] Blocked exploit payload: "cat secret.txt || rm -rf /" (type: CMD_CHAINING)
+    [CACHE INFO] Prompt prefix alignment achieved. Hashing cache hit rate: 94.6%. Token savings: 51.2%.
+    [REPLAY OK] Trace similarity score: 1.00 (No prompt drift detected).
 
+---
 
-[AST WARNING] Blocked exploit payload: "cat secret.txt || rm -rf /" (type: CMD_CHAINING)
-[CACHE INFO] Prompt prefix alignment achieved. Hashing cache hit rate: 94.6%. Token savings: 51.2%.
-[REPLAY OK] Trace similarity score: 1.00 (No prompt drift detected).
-Security Disclaimers
+## Security Disclaimers
 AgentSentry reduces risk in agent-driven runtime systems. However, container isolation and AST parsing are not bulletproof. Always run agent systems inside isolated virtual networks with limited write privileges on parent drives.
 
-License
+---
+
+## License
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-
-
-
-
-
