@@ -14,8 +14,20 @@
       "destination": "/api"
     },
     {
-      "source": "/(.*)",
-      "destination": "/website/$1"
+      "source": "/",
+      "destination": "/website/index.html"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/website/index.html"
+    },
+    {
+      "source": "/style.css",
+      "destination": "/website/style.css"
+    },
+    {
+      "source": "/script.js",
+      "destination": "/website/script.js"
     }
   ]
 }
