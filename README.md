@@ -88,6 +88,50 @@ agentsentry/
 
 ---
 
+## 🚀 Deploying to Vercel
+
+AgentSentry can be deployed directly to Vercel as a hybrid application: the interactive portfolio website is served statically at the root, and the security proxy is served dynamically as a serverless Python FastAPI backend!
+
+### Step 1: Push to GitHub
+If you haven't already, make sure the project is pushed to your GitHub repository:
+```bash
+git push -u origin main
+```
+
+### Step 2: Import Project on Vercel
+1. Go to your **[Vercel Dashboard](https://vercel.com/dashboard)**.
+2. Click **Add New** > **Project** and select your `Agent_Sentry` repository.
+3. Keep default settings. Vercel will automatically detect `vercel.json` and configure:
+   - **Framework Preset:** `Other` (handled dynamically by our routing rules).
+   - **Root Directory:** `./` (repository root).
+
+### Step 3: Add Environment Variables (Optional)
+Add the following keys to your Vercel deployment settings:
+- `REDIS_URL`: URL to your external Redis instance (e.g. [Upstash Redis](https://upstash.com/)) to enable prompt caching across stateless serverless functions.
+- `WORKSPACE_ROOT`: Directory for testing context (`/tmp` by default).
+
+### Step 4: Click Deploy!
+Your deployment will be live at `https://your-project.vercel.app`.
+
+---
+
+## 🎯 How to Use AgentSentry on Vercel
+
+Once deployed, the app functions in two distinct ways:
+
+### 1. The Interactive Portfolio UI (Frontend)
+Visit `https://your-project.vercel.app` in your browser. You can run interactive preset simulations (benign tests, traversal blockers, AST checkers, and delta caching metrics) directly on the premium terminal interface.
+
+### 2. The Sandbox Proxy Gateway (Backend API)
+You can route your local IDE code completion traffic directly through your Vercel deployment:
+1. Set your IDE base URL (e.g. Cursor or VS Code) to point to your Vercel endpoint:
+   ```text
+   https://your-project.vercel.app/v1
+   ```
+2. Any prompts or tool invocations are automatically parsed, sanitized, and cached in the cloud before hitting the LLM provider!
+
+---
+
 ## 🛠️ Quickstart
 
 ### 1. Installation
