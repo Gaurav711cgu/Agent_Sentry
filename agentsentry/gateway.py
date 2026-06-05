@@ -30,9 +30,10 @@ class AgentSentryGateway:
         # 2. Initialize Redis-backed Async Suffix Cacher
         # In real production, we pass config.mcp_proxy_url or similar Redis service URL
         # For testing fallback, we default to local in-memory cacher if Redis is offline
+        import os
         self.cacher = SuffixDeltaCompressor(
             savings_threshold=config.cache_savings_threshold,
-            redis_url=None  # Can be configured via environment variables
+            redis_url=os.getenv("REDIS_URL")
         )
         
         if is_replay_mode:

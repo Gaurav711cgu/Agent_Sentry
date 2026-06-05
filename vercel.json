@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/v1/(.*)",
+      "destination": "/api"
+    },
+    {
+      "source": "/metrics",
+      "destination": "/api"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/website/$1"
+    }
+  ]
+}
