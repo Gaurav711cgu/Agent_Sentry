@@ -30,6 +30,8 @@
         <nav>
             <a href="#simulator"><i class="fa-solid fa-terminal"></i> Demo</a>
             <a href="#bento"><i class="fa-solid fa-chart-simple"></i> Metrics</a>
+            <a href="#integrations"><i class="fa-solid fa-plug"></i> Setup</a>
+            <a href="#blog"><i class="fa-solid fa-book"></i> Deep-Dives</a>
             <a href="#pillars"><i class="fa-solid fa-cubes"></i> Pillars</a>
             <a href="https://github.com/Gaurav711cgu/Agent_Sentry.git" target="_blank" class="github-btn">
                 <i class="fa-brands fa-github"></i> Repository
@@ -74,6 +76,12 @@
                     </button>
                     <button class="preset-btn exploit-btn" onclick="runPreset('injection')">
                         <i class="fa-solid fa-bug"></i> Exploit: Shell Injection
+                    </button>
+                    <button class="preset-btn exploit-btn" onclick="runPreset('homoglyph')">
+                        <i class="fa-solid fa-mask"></i> Exploit: Unicode Homoglyph
+                    </button>
+                    <button class="preset-btn exploit-btn" onclick="runPreset('forkbomb')">
+                        <i class="fa-solid fa-bomb"></i> Exploit: Sandbox Fork Bomb
                     </button>
                     <button class="preset-btn cache-btn" onclick="runPreset('cache')">
                         <i class="fa-solid fa-bolt"></i> Caching Alignment Run
@@ -166,6 +174,74 @@
                 <div class="db-badge"><i class="fa-solid fa-server"></i> Redis Backend</div>
                 <p>Asynchronous state replication with a Redis backend enables horizontal gateway scaling across distributed developer workspaces.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- Integrations Guide Section -->
+    <section id="integrations" class="integrations-section">
+        <div class="section-header">
+            <span class="step-num">03 — INTEGRATION</span>
+            <h2>Zero-Configuration Setup</h2>
+            <p>Connect AgentSentry to your developer environment in under 60 seconds. Choose your environment settings below:</p>
+        </div>
+
+        <div class="integrations-container">
+            <div class="tab-headers">
+                <button class="tab-btn active" id="tabBtn-cursor" onclick="switchTab('cursor')">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Cursor IDE
+                </button>
+                <button class="tab-btn" id="tabBtn-claude" onclick="switchTab('claude')">
+                    <i class="fa-solid fa-terminal"></i> Claude Desktop
+                </button>
+                <button class="tab-btn" id="tabBtn-github-actions" onclick="switchTab('github-actions')">
+                    <i class="fa-brands fa-github"></i> GitHub Actions
+                </button>
+            </div>
+
+            <div class="tab-content" id="tabContent">
+                <!-- Content is populated by script.js dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Blog / Articles Section -->
+    <section id="blog" class="blog-section">
+        <div class="section-header">
+            <span class="step-num">04 — KNOWLEDGE</span>
+            <h2>Technical Deep-Dives</h2>
+            <p>Explaining the systems engineering and security science behind prompt cache alignment and sandbox limits.</p>
+        </div>
+
+        <div class="blog-grid">
+            <article class="blog-card">
+                <div class="blog-meta">
+                    <span class="blog-tag tag-security"><i class="fa-solid fa-shield-halved"></i> Security</span>
+                    <span class="blog-read-time">5 min read</span>
+                </div>
+                <h3>Intercepting AST Exploits in LLM Shell Commands</h3>
+                <p>Naively evaluating code written by autonomous agents creates massive remote execution risks. We explain how recursive AST parsers block subshell breakouts.</p>
+                <a href="https://github.com/Gaurav711cgu/Agent_Sentry" target="_blank" class="blog-link">Read Article <i class="fa-solid fa-arrow-right-long"></i></a>
+            </article>
+
+            <article class="blog-card">
+                <div class="blog-meta">
+                    <span class="blog-tag tag-cache"><i class="fa-solid fa-bolt-lightning"></i> Caching</span>
+                    <span class="blog-read-time">7 min read</span>
+                </div>
+                <h3>Suffix-Delta Caching for 50% LLM API Discounts</h3>
+                <p>Prompt prefix hashing only works if the prompt remains aligned. By reordering static headers and computing raw differences, we optimize caching parameters.</p>
+                <a href="https://github.com/Gaurav711cgu/Agent_Sentry" target="_blank" class="blog-link">Read Article <i class="fa-solid fa-arrow-right-long"></i></a>
+            </article>
+
+            <article class="blog-card">
+                <div class="blog-meta">
+                    <span class="blog-tag tag-testing"><i class="fa-solid fa-flask"></i> Testing</span>
+                    <span class="blog-read-time">4 min read</span>
+                </div>
+                <h3>Deterministic Mock-Replays: Taming Prompt Drift</h3>
+                <p>Prompt changes can cause agents to enter infinite loops or choose incorrect tools. We discuss using Levenshtein distance metrics to check trace similarity.</p>
+                <a href="https://github.com/Gaurav711cgu/Agent_Sentry" target="_blank" class="blog-link">Read Article <i class="fa-solid fa-arrow-right-long"></i></a>
+            </article>
         </div>
     </section>
 

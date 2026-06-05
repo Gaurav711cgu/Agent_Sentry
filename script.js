@@ -65,6 +65,37 @@ const presets = {
             { text: "⚡ [Cache Engine] Cache Hit! Sending suffix delta only.", type: "green" },
             { text: "⚡ [Telemetry] Saved 23,606 prefill tokens. Cache Savings: 50.56%", type: "green" }
         ]
+    },
+    homoglyph: {
+        command: "python -c \"os.system('cаt /etc/passwd')\"",
+        output: [
+            { text: "Executing script command via AgentSentry AST parser...", type: "system" },
+            { text: "[Firewall Check] Normalizing string payloads...", type: "system" },
+            { text: "-> Found Unicode Homoglyph symbol 'а' (Cyrillic U+0430)", type: "orange" },
+            { text: "-> Normalized to Latin 'a' (U+0061)", type: "orange" },
+            { text: "-> Tokenizing normalized command...", type: "system" },
+            { text: "[Firewall Check] Resolving target path: /etc/passwd", type: "system" },
+            { text: "🛑 [AgentSentry Block] obfuscation.py: HOMOGLYPH ESCAPE DETECTED", type: "red" },
+            { text: "Target path '/etc/passwd' resolves outside workspace boundary.", type: "red" },
+            { text: "Operation aborted immediately.", type: "red" },
+            { text: "[Telemetry: Logged Exploit Attempt under rule 'homoglyph_bypass']", type: "orange" }
+        ],
+        triggerAlarm: true
+    },
+    forkbomb: {
+        command: ":(){ :|:& };:",
+        output: [
+            { text: "Running command inside isolated Docker sandbox container...", type: "system" },
+            { text: "[Sandbox Check] Enforcing memory limits (128MB) and CPU shares (0.5 cores)...", type: "system" },
+            { text: "[Sandbox Monitor] Running container process...", type: "system" },
+            { text: "[Sandbox Monitor] Active thread spawn: 10... 50... 200...", type: "system" },
+            { text: "[Sandbox Monitor] Warning: Container memory utilization hit 100% (128MB limit)", type: "orange" },
+            { text: "🛑 [AgentSentry Block] sandbox.py: RUNAWAY PROCESS CONTAINER TERMINATED", type: "red" },
+            { text: "Fork bomb successfully contained. Host system processes kept secure.", type: "red" },
+            { text: "Operation aborted immediately.", type: "red" },
+            { text: "[Telemetry: Logged Sandbox Violation under rule 'process_limit_exceeded']", type: "orange" }
+        ],
+        triggerAlarm: true
     }
 };
 
@@ -150,6 +181,7 @@ function printOutputs(outputs, index, triggerAlarm) {
 
 function flashBlockMetric() {
     const metricsBlock = document.getElementById("metricsBlock");
+    if (!metricsBlock) return;
     metricsBlock.style.transition = "color 0.2s, transform 0.2s";
     metricsBlock.style.color = "var(--security-red)";
     metricsBlock.style.transform = "scale(1.1)";
@@ -159,3 +191,97 @@ function flashBlockMetric() {
         metricsBlock.style.transform = "";
     }, 800);
 }
+
+// Integration tab guide configurations
+const integrationGuides = {
+    cursor: `
+        <div class="integration-guide">
+            <h3><i class="fa-solid fa-wand-magic-sparkles"></i> Configure Cursor IDE Proxy</h3>
+            <p>Route your Cursor code completions through the local AgentSentry proxy gateway to automatically enable suffix-delta caching and security checks.</p>
+            <ol class="guide-list">
+                <li>Open Cursor and navigate to <strong>Settings -> Models</strong>.</li>
+                <li>Locate the <strong>OpenAI API / Anthropic API</strong> base URL settings.</li>
+                <li>Override the default endpoint pointing to your local proxy gateway:
+                    <pre class="code-block">http://127.0.0.1:8000/v1</pre>
+                </li>
+                <li>Enter your API key. AgentSentry will forward authenticated calls to the LLM provider after auditing prompt commands.</li>
+            </ol>
+        </div>
+    `,
+    claude: `
+        <div class="integration-guide">
+            <h3><i class="fa-solid fa-terminal"></i> Configure Claude Desktop MCP</h3>
+            <p>Restrict Claude's command line executions using AgentSentry's containment firewall by editing the local Model Context Protocol (MCP) server configuration.</p>
+            <ol class="guide-list">
+                <li>Locate and open your Claude Desktop config file:
+                    <pre class="code-block">~/Library/Application Support/Claude/claude_desktop_config.json</pre>
+                </li>
+                <li>Add the <code>agentsentry-secure-shell</code> service declaration inside the <code>mcpServers</code> block:
+                    <pre class="code-block">{
+  "mcpServers": {
+    "agentsentry-secure-shell": {
+      "command": "python",
+      "args": ["-m", "agentsentry.firewall.secure_mcp_bridge"],
+      "env": {
+        "WORKSPACE_ROOT": "/Users/user/project",
+        "EXECUTION_MODE": "docker"
+      }
+    }
+  }
+}</pre>
+                </li>
+                <li>Restart Claude Desktop. All command executions will now run safely inside the Docker sandbox.</li>
+            </ol>
+        </div>
+    `,
+    "github-actions": `
+        <div class="integration-guide">
+            <h3><i class="fa-brands fa-github"></i> Configure GitHub Actions CI/CD</h3>
+            <p>Add trajectory regression checking and drift verification to your pull requests by setting up a validation job in GitHub Actions.</p>
+            <ol class="guide-list">
+                <li>Create a workflow file in your repository: <code>.github/workflows/agent-regression.yml</code>.</li>
+                <li>Insert the following configuration to run the AgentSentry mock replay tests:
+                    <pre class="code-block">name: Agent Trajectory Regression CI
+on: [push]
+jobs:
+  validate-trajectory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install pytest uvicorn
+      - name: Execute Replay Tests
+        run: |
+          # Start the proxy in replay mode using the saved baseline logs
+          agentsentry start --port 8000 --replay --trace tests/baselines/flow.json &
+          sleep 2
+          pytest tests/test_replay.py</pre>
+                </li>
+                <li>Commit the file. GitHub Actions will now automatically review prompt drift on every push!</li>
+            </ol>
+        </div>
+    `
+};
+
+function switchTab(tabId) {
+    // Remove active class from all tab buttons
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    // Add active class to selected button
+    const activeBtn = document.getElementById(`tabBtn-${tabId}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // Update tab content
+    const tabContent = document.getElementById('tabContent');
+    if (tabContent) {
+        tabContent.innerHTML = integrationGuides[tabId];
+    }
+}
+
+// Initialize default tab on page load
+document.addEventListener("DOMContentLoaded", () => {
+    switchTab('cursor');
+});
