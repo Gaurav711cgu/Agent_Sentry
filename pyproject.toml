@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentsentry"
+version = "1.0.0"
+description = "Enterprise Security, Caching, and Trajectory Validation Gateway for AI Agents"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "fastapi>=0.100.0",
+    "uvicorn>=0.22.0",
+    "pydantic>=2.0",
+    "networkx>=3.0",
+    "click>=8.0",
+]
+
+[project.scripts]
+agentsentry = "agentsentry.cli:main"
