@@ -7,9 +7,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,17 +18,16 @@
     <!-- Navigation Header -->
     <header class="navbar">
         <div class="logo">
-            <i class="fa-solid fa-shield-halved brand-icon"></i>
-            <span>AgentSentry</span>
+            <span>[SEC] AGENTSENTRY</span>
         </div>
         <nav>
-            <a href="#simulator"><i class="fa-solid fa-terminal"></i> Demo</a>
-            <a href="#bento"><i class="fa-solid fa-chart-simple"></i> Metrics</a>
-            <a href="#integrations"><i class="fa-solid fa-plug"></i> Setup</a>
-            <a href="#blog"><i class="fa-solid fa-book"></i> Deep-Dives</a>
-            <a href="#pillars"><i class="fa-solid fa-cubes"></i> Pillars</a>
+            <a href="#simulator">DEMO</a>
+            <a href="#bento">METRICS</a>
+            <a href="#integrations">SETUP</a>
+            <a href="#blog">DEEP-DIVES</a>
+            <a href="#pillars">PILLARS</a>
             <a href="https://github.com/Gaurav711cgu/Agent_Sentry.git" target="_blank" class="github-btn">
-                <i class="fa-brands fa-github"></i> Repository
+                REPOSITORY
             </a>
         </nav>
     </header>
@@ -38,16 +35,16 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-tag">
-            <span class="badge"><i class="fa-solid fa-circle-check"></i> Security Audited v1.0.0</span>
+            <span class="badge">[OK] SECURITY AUDITED V1.0.0</span>
         </div>
         <h1 class="hero-title">I build systems for intelligence.</h1>
         <p class="hero-subtitle">
             Engineering magic at the intersection of speed and stability — where every resource is respected and every autonomous execution runs in absolute safety.
         </p>
         <div class="hero-actions">
-            <a href="#simulator" class="btn-primary">Launch Live Demo</a>
+            <a href="#simulator" class="btn-primary">LAUNCH LIVE DEMO</a>
             <a href="https://github.com/Gaurav711cgu/Agent_Sentry.git" target="_blank" class="btn-secondary">
-                <i class="fa-brands fa-github"></i> Clone Repository
+                CLONE REPOSITORY
             </a>
         </div>
     </section>
@@ -65,22 +62,22 @@
                 <h3>Trigger Payload Presets</h3>
                 <div class="preset-buttons">
                     <button class="preset-btn benign-btn" onclick="runPreset('benign')">
-                        <i class="fa-solid fa-check"></i> Run Safe Test Suite
+                        [OK] RUN SAFE TEST SUITE
                     </button>
                     <button class="preset-btn exploit-btn" onclick="runPreset('traversal')">
-                        <i class="fa-solid fa-triangle-exclamation"></i> Exploit: Path Traversal
+                        [FAIL] EXPLOIT: PATH TRAVERSAL
                     </button>
                     <button class="preset-btn exploit-btn" onclick="runPreset('injection')">
-                        <i class="fa-solid fa-bug"></i> Exploit: Shell Injection
+                        [FAIL] EXPLOIT: SHELL INJECTION
                     </button>
                     <button class="preset-btn exploit-btn" onclick="runPreset('homoglyph')">
-                        <i class="fa-solid fa-mask"></i> Exploit: Unicode Homoglyph
+                        [FAIL] EXPLOIT: UNICODE HOMOGLYPH
                     </button>
                     <button class="preset-btn exploit-btn" onclick="runPreset('forkbomb')">
-                        <i class="fa-solid fa-bomb"></i> Exploit: Sandbox Fork Bomb
+                        [FAIL] EXPLOIT: SANDBOX FORK BOMB
                     </button>
                     <button class="preset-btn cache-btn" onclick="runPreset('cache')">
-                        <i class="fa-solid fa-bolt"></i> Caching Alignment Run
+                        [RUN] CACHING ALIGNMENT RUN
                     </button>
                 </div>
             </div>
@@ -116,10 +113,7 @@
 
         <div class="bento-grid">
             <!-- Card 1: Block Rate -->
-            <div class="bento-card card-large card-glow">
-                <div class="card-header-icon">
-                    <i class="fa-solid fa-shield-halved icon-security"></i>
-                </div>
+            <div class="bento-card card-large">
                 <div class="card-metrics-big" id="metricsBlock">100.00%</div>
                 <h3>Exploit Deflection Rate</h3>
                 <p>100 out of 100 benchmark exploit payloads (URL obfuscations, base64 subshells, symlinks) blocked with zero false positives on benign inputs.</p>
@@ -128,9 +122,6 @@
 
             <!-- Card 2: Latency -->
             <div class="bento-card card-medium">
-                <div class="card-header-icon">
-                    <i class="fa-solid fa-gauge-high icon-latency"></i>
-                </div>
                 <div class="card-metrics-big">0.0075<span class="unit">ms</span></div>
                 <h3>Ultra-Low Latency Overhead</h3>
                 <p>Thread-pool offloading keeps processing times under 8 microseconds per API completion, exceeding the strict 15ms SLA target.</p>
@@ -138,9 +129,6 @@
 
             <!-- Card 3: Cache Savings -->
             <div class="bento-card card-medium">
-                <div class="card-header-icon">
-                    <i class="fa-solid fa-circle-nodes icon-cache"></i>
-                </div>
                 <div class="radial-progress-container">
                     <svg class="radial-svg" viewBox="0 0 100 100">
                         <circle class="bg-circle" cx="50" cy="50" r="40"></circle>
@@ -156,10 +144,10 @@
             <div class="bento-card card-small">
                 <h3>Unit Test Suite</h3>
                 <div class="test-list">
-                    <div class="test-item passed"><i class="fa-solid fa-circle-check"></i> test_firewall_obfuscation</div>
-                    <div class="test-item passed"><i class="fa-solid fa-circle-check"></i> test_path_containment</div>
-                    <div class="test-item passed"><i class="fa-solid fa-circle-check"></i> test_sandbox_docker</div>
-                    <div class="test-item passed"><i class="fa-solid fa-circle-check"></i> test_prefix_aligner</div>
+                    <div class="test-item passed">[OK] test_firewall_obfuscation</div>
+                    <div class="test-item passed">[OK] test_path_containment</div>
+                    <div class="test-item passed">[OK] test_sandbox_docker</div>
+                    <div class="test-item passed">[OK] test_prefix_aligner</div>
                 </div>
                 <p class="test-footer">8 passed / 8 total checks (100% Green)</p>
             </div>
@@ -167,7 +155,7 @@
             <!-- Card 5: Horizontal Scaling -->
             <div class="bento-card card-small">
                 <h3>Stateless Clustering</h3>
-                <div class="db-badge"><i class="fa-solid fa-server"></i> Redis Backend</div>
+                <div class="db-badge">REDIS BACKEND</div>
                 <p>Asynchronous state replication with a Redis backend enables horizontal gateway scaling across distributed developer workspaces.</p>
             </div>
         </div>
@@ -184,13 +172,13 @@
         <div class="integrations-container">
             <div class="tab-headers">
                 <button class="tab-btn active" id="tabBtn-cursor" onclick="switchTab('cursor')">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i> Cursor IDE
+                    CURSOR IDE
                 </button>
                 <button class="tab-btn" id="tabBtn-claude" onclick="switchTab('claude')">
-                    <i class="fa-solid fa-terminal"></i> Claude Desktop
+                    CLAUDE DESKTOP
                 </button>
                 <button class="tab-btn" id="tabBtn-github-actions" onclick="switchTab('github-actions')">
-                    <i class="fa-brands fa-github"></i> GitHub Actions
+                    GITHUB ACTIONS
                 </button>
             </div>
 
@@ -211,32 +199,32 @@
         <div class="blog-grid">
             <article class="blog-card">
                 <div class="blog-meta">
-                    <span class="blog-tag tag-security"><i class="fa-solid fa-shield-halved"></i> Security</span>
-                    <span class="blog-read-time">5 min read</span>
+                    <span class="blog-tag tag-security">SECURITY</span>
+                    <span class="blog-read-time">5 MIN READ</span>
                 </div>
                 <h3>Intercepting AST Exploits in LLM Shell Commands</h3>
                 <p>Naively evaluating code written by autonomous agents creates massive remote execution risks. We explain how recursive AST parsers block subshell breakouts.</p>
-                <a href="https://github.com/Gaurav711cgu/Agent_Sentry" target="_blank" class="blog-link">Read Article <i class="fa-solid fa-arrow-right-long"></i></a>
+                <a href="https://github.com/Gaurav711cgu/Agent_Sentry" target="_blank" class="blog-link">READ ARTICLE</a>
             </article>
 
             <article class="blog-card">
                 <div class="blog-meta">
-                    <span class="blog-tag tag-cache"><i class="fa-solid fa-bolt-lightning"></i> Caching</span>
-                    <span class="blog-read-time">7 min read</span>
+                    <span class="blog-tag tag-cache">CACHING</span>
+                    <span class="blog-read-time">7 MIN READ</span>
                 </div>
                 <h3>Suffix-Delta Caching for 50% LLM API Discounts</h3>
                 <p>Prompt prefix hashing only works if the prompt remains aligned. By reordering static headers and computing raw differences, we optimize caching parameters.</p>
-                <a href="https://github.com/Gaurav711cgu/Agent_Sentry" target="_blank" class="blog-link">Read Article <i class="fa-solid fa-arrow-right-long"></i></a>
+                <a href="https://github.com/Gaurav711cgu/Agent_Sentry" target="_blank" class="blog-link">READ ARTICLE</a>
             </article>
 
             <article class="blog-card">
                 <div class="blog-meta">
-                    <span class="blog-tag tag-testing"><i class="fa-solid fa-flask"></i> Testing</span>
-                    <span class="blog-read-time">4 min read</span>
+                    <span class="blog-tag tag-testing">TESTING</span>
+                    <span class="blog-read-time">4 MIN READ</span>
                 </div>
                 <h3>Deterministic Mock-Replays: Taming Prompt Drift</h3>
                 <p>Prompt changes can cause agents to enter infinite loops or choose incorrect tools. We discuss using Levenshtein distance metrics to check trace similarity.</p>
-                <a href="https://github.com/Gaurav711cgu/Agent_Sentry" target="_blank" class="blog-link">Read Article <i class="fa-solid fa-arrow-right-long"></i></a>
+                <a href="https://github.com/Gaurav711cgu/Agent_Sentry" target="_blank" class="blog-link">READ ARTICLE</a>
             </article>
         </div>
     </section>
@@ -251,7 +239,6 @@
         <div class="pillars-container">
             <div class="pillar-box">
                 <div class="pillar-header">
-                    <i class="fa-solid fa-lock"></i>
                     <h3>1. MCP-Guard Firewall</h3>
                 </div>
                 <p>Combines recursive AST command tokenizing with path containment checks to stop directory escapes, symlink traversals, and subshell executions inside a restricted Docker sandbox.</p>
@@ -259,7 +246,6 @@
 
             <div class="pillar-box">
                 <div class="pillar-header">
-                    <i class="fa-solid fa-bolt-lightning"></i>
                     <h3>2. Agent-Cache Engine</h3>
                 </div>
                 <p>Anchors static contexts (system instructions, schemas) to align cache boundaries. Uses suffix-delta compression to transmit only changes, reducing prefill costs.</p>
@@ -267,7 +253,6 @@
 
             <div class="pillar-box">
                 <div class="pillar-header">
-                    <i class="fa-solid fa-flask"></i>
                     <h3>3. Agent-Mock Harness</h3>
                 </div>
                 <p>Records agent execution trajectories. Mock-replays tool calls to enable offline testing, and diff-matches sequences to flag parameter drift in prompt updates.</p>
@@ -279,8 +264,8 @@
     <footer>
         <p>&copy; 2026 AgentSentry Project. Built by Gaurav Kumar Nayak.</p>
         <div class="footer-links">
-            <a href="https://github.com/Gaurav711cgu/Agent_Sentry.git" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
-            <a href="https://gaurav-portfolio-iycu.vercel.app/" target="_blank"><i class="fa-solid fa-globe"></i> Portfolio</a>
+            <a href="https://github.com/Gaurav711cgu/Agent_Sentry.git" target="_blank">GITHUB</a>
+            <a href="https://gaurav-portfolio-iycu.vercel.app/" target="_blank">PORTFOLIO</a>
         </div>
     </footer>
 
