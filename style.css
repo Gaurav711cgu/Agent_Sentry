@@ -836,20 +836,20 @@ footer {
 }
 
 .tag-security {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--security-green);
-    border-color: rgba(16, 185, 129, 0.25);
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    border-color: rgba(76, 175, 80, 0.25);
 }
 
 .tag-cache {
     background: rgba(59, 130, 246, 0.1);
-    color: var(--accent-blue);
+    color: #3b82f6;
     border-color: rgba(59, 130, 246, 0.25);
 }
 
 .tag-testing {
     background: rgba(139, 92, 246, 0.1);
-    color: var(--accent-purple);
+    color: #8b5cf6;
     border-color: rgba(139, 92, 246, 0.25);
 }
 
