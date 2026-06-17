@@ -34,47 +34,6 @@ body {
 /* ==========================================================================
    BACKGROUND GLOW SYSTEM (Glassmorphism + Bento Grid)
    ========================================================================== */
-.glow-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -10;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.glow-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(140px);
-    opacity: 0.15;
-    mix-blend-mode: screen;
-    animation: orb-float 20s infinite ease-in-out alternate;
-}
-
-.orb-1 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, var(--accent-purple) 0%, rgba(0,0,0,0) 70%);
-    top: -100px;
-    right: 5%;
-}
-
-.orb-2 {
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, var(--accent-blue) 0%, rgba(0,0,0,0) 70%);
-    bottom: -150px;
-    left: -5%;
-    animation-delay: -5s;
-}
-
-@keyframes orb-float {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(60px, 40px) scale(1.1); }
-}
 
 /* ==========================================================================
    HEADER / NAVIGATION
@@ -88,8 +47,7 @@ body {
     top: 0;
     width: 100%;
     z-index: 100;
-    backdrop-filter: blur(16px);
-    background-color: rgba(8, 9, 20, 0.6);
+    background-color: rgba(8, 9, 20, 0.95);
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -99,9 +57,7 @@ body {
     gap: 0.75rem;
     font-size: 1.4rem;
     font-weight: 800;
-    background: linear-gradient(135deg, #ffffff 40%, var(--text-secondary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ffffff;
 }
 
 .brand-icon {
@@ -131,7 +87,7 @@ nav a:hover {
 .github-btn {
     background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
     padding: 0.5rem 1.2rem;
-    border-radius: 40px;
+    border-radius: 8px;
     border: 1px solid var(--border-color);
     transition: all 0.3s;
 }
@@ -160,7 +116,7 @@ nav a:hover {
     background: rgba(139, 92, 246, 0.15);
     color: var(--accent-purple);
     padding: 0.4rem 1rem;
-    border-radius: 40px;
+    border-radius: 8px;
     font-size: 0.85rem;
     font-weight: 600;
     border: 1px solid rgba(139, 92, 246, 0.3);
@@ -173,9 +129,7 @@ nav a:hover {
     font-weight: 800;
     line-height: 1.15;
     margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, #ffffff 40%, rgba(255,255,255,0.6) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ffffff;
 }
 
 .hero-subtitle {
@@ -195,7 +149,7 @@ nav a:hover {
     background: linear-gradient(135deg, var(--accent-purple) 0%, #7c3aed 100%);
     color: var(--text-primary);
     padding: 0.85rem 2.2rem;
-    border-radius: 40px;
+    border-radius: 8px;
     font-weight: 600;
     box-shadow: 0 10px 20px rgba(139, 92, 246, 0.25);
     transition: all 0.3s;
@@ -203,7 +157,6 @@ nav a:hover {
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(139, 92, 246, 0.4);
 }
 
 .btn-secondary {
@@ -211,7 +164,7 @@ nav a:hover {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-primary);
     padding: 0.85rem 2.2rem;
-    border-radius: 40px;
+    border-radius: 8px;
     font-weight: 600;
     border: 1px solid var(--border-color);
     transition: all 0.3s;
@@ -413,9 +366,9 @@ nav a:hover {
 
 /* Flashing alarm overlay on deflection block */
 @keyframes alarm-flash {
-    0% { border-color: var(--border-color); box-shadow: 0 0 0 rgba(0,0,0,0); }
-    50% { border-color: var(--security-red); box-shadow: 0 0 30px rgba(239, 68, 68, 0.4); }
-    100% { border-color: var(--border-color); box-shadow: 0 0 0 rgba(0,0,0,0); }
+    0% { border-color: var(--border-color); }
+    50% { border-color: var(--security-red); }
+    100% { border-color: var(--border-color); }
 }
 
 .terminal-alarm {
@@ -480,9 +433,7 @@ nav a:hover {
     font-weight: 800;
     line-height: 1;
     margin-bottom: 1rem;
-    background: linear-gradient(135deg, #ffffff 50%, var(--text-secondary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ffffff;
 }
 
 .card-metrics-big .unit {
