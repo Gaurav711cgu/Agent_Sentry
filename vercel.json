@@ -16,6 +16,10 @@
     {
       "src": "script.js",
       "use": "@vercel/static"
+    },
+    {
+      "src": "logo.png",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -38,6 +42,10 @@
     {
       "src": "/script.js",
       "dest": "script.js"
+    },
+    {
+      "src": "/logo.png",
+      "dest": "logo.png"
     },
     {
       "src": "/(.*)",
