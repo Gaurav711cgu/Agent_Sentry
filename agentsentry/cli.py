@@ -25,7 +25,7 @@ def run_start(args):
     gateway = AgentSentryGateway(config, trace_file, is_replay_mode=replay)
     app = create_app(gateway)
     
-    uvicorn.run(app, host=host, port=port)
+    uvicorn.run(app, host=host, port=port, loop="uvloop")
 
 def run_init(args):
     """

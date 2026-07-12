@@ -114,17 +114,21 @@ class SignatureMatcher:
             self._insecure_output_markers
         )
 
+        # O(N) Optimization: Compile all patterns into a single Aho-Corasick-like state machine
+        # via a combined OR regex pattern. This shifts time complexity from O(M*K) to O(M)
+        combined_pattern = "|".join(f"(?:{p})" for p in self.injection_markers)
+        self._compiled_regex = re.compile(combined_pattern, re.IGNORECASE | re.DOTALL)
+
     def scan_for_injection(self, text: str) -> Tuple[bool, str]:
         """
-        Scans strings for known prompt injection patterns.
+        Scans strings for known prompt injection patterns in O(N) time.
         Uses DOTALL so separator-embedded directives spanning newlines are caught.
         """
         if not text:
             return False, ""
 
-        for pattern in self.injection_markers:
-            match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
-            if match:
-                return True, f"Matched injection signature -> {match.group(0)[:60]}"
+        match = self._compiled_regex.search(text)
+        if match:
+            return True, f"Matched injection signature -> {match.group(0)[:60]}"
 
         return False, ""

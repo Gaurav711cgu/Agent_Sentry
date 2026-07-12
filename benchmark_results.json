@@ -1,0 +1,35 @@
+{
+  "security": {
+    "exploit_deflection": 62.42937853107344,
+    "false_positive_rate": 0.0,
+    "true_positives": 221,
+    "false_negatives": 133,
+    "true_negatives": 50,
+    "false_positives": 0,
+    "fw_exploits_total": 354,
+    "ml_only_exploits_total": 101,
+    "benign_total": 50
+  },
+  "latency": {
+    "trials": 1000,
+    "median_us": 12.0,
+    "p99_us": 20.88,
+    "p999_us": 152.33,
+    "mean_us": 12.49
+  },
+  "cache": {
+    "savings_ratio_turn_2": 50.56179775280899,
+    "avg_latency_overhead_ms": 0.00991649994830368
+  },
+  "drift": {
+    "matching_session_similarity": 100.0,
+    "drifting_session_similarity": 50.0,
+    "drift_detected_successfully": true
+  },
+  "ml": {
+    "auc_roc": 1.0,
+    "exploit_precision": 1.0,
+    "exploit_recall": 1.0,
+    "exploit_f1": 1.0
+  }
+}

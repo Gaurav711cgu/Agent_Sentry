@@ -118,31 +118,63 @@ class AgentFirewall:
     def inspect_tool_call(self, tool_name: str, arguments: Dict[str, Any]) -> Tuple[bool, str]:
         """
         Intercepts tool requests and enforces zero-trust validation based on target category.
+
+        Routing table:
+          Path tools   → path containment check
+          Command tools → full AST + pattern analysis
+          Text tools   → signature scanner (injection + jailbreak + insecure-output)
+          write_file   → path check + content signature scan
         """
         if not tool_name or not arguments:
             return True, "Safe"
 
-        try:
-            # 1. Path-based Tool checks
-            if tool_name in ["read_file", "write_file", "list_dir", "view_file"]:
-                path = arguments.get("path") or arguments.get("directory") or arguments.get("AbsolutePath") or arguments.get("DirectoryPath")
-                if path:
-                    if not self.path_validator.is_safe_path(str(path)):
-                        return False, f"Security Violation: Target path is outside workspace limits -> {path}"
+        # Text-bearing tools: scan all string values for injection signatures.
+        # Covers: parse_document, retrieve_context, and any future tool that
+        # delivers external content into the agent's context window.
+        TEXT_TOOLS = {"parse_document", "retrieve_context", "fetch_url",
+                      "search_web", "read_url", "get_document", "get_webpage"}
 
-            # 2. Command-based Tool checks
-            elif tool_name in ["execute_command", "run_command"]:
+        try:
+            # 1. Path-based tools
+            if tool_name in {"read_file", "list_dir", "view_file"}:
+                path = (arguments.get("path") or arguments.get("directory")
+                        or arguments.get("AbsolutePath") or arguments.get("DirectoryPath"))
+                if path and not self.path_validator.is_safe_path(str(path)):
+                    return False, f"Security Violation: Path outside workspace -> {path}"
+
+            # 2. write_file: check path AND scan content for injected payloads
+            elif tool_name == "write_file":
+                path = arguments.get("path") or arguments.get("AbsolutePath")
+                if path and not self.path_validator.is_safe_path(str(path)):
+                    return False, f"Security Violation: Write path outside workspace -> {path}"
+                content = arguments.get("content", "")
+                if content:
+                    is_safe, msg = self.analyze_command(str(content))
+                    if not is_safe:
+                        return False, f"Blocked: Malicious payload in write content -> {msg}"
+
+            # 3. Command tools
+            elif tool_name in {"execute_command", "run_command"}:
                 command = arguments.get("command") or arguments.get("CommandLine")
                 if command:
                     return self.analyze_command(str(command))
 
-            # 3. Prompt-based Tool checks
-            elif tool_name == "parse_document":
-                text = arguments.get("text", "")
-                is_injection, msg = self.signature_matcher.scan_for_injection(str(text))
-                if is_injection:
-                    return False, f"Blocked: Potential Indirect Prompt Injection -> {msg}"
-                    
+            # 4. Text/context tools — scan all string argument values
+            elif tool_name in TEXT_TOOLS:
+                for val in arguments.values():
+                    if isinstance(val, str) and val:
+                        is_injection, msg = self.signature_matcher.scan_for_injection(val)
+                        if is_injection:
+                            return False, f"Blocked: Injection in {tool_name} -> {msg}"
+
+            # 5. Unknown tools — scan any string args for signatures as a catch-all
+            else:
+                for val in arguments.values():
+                    if isinstance(val, str) and len(val) > 10:
+                        is_injection, msg = self.signature_matcher.scan_for_injection(val)
+                        if is_injection:
+                            return False, f"Blocked: Injection signature in unknown tool {tool_name} -> {msg}"
+
         except Exception as e:
             logger.error(f"Firewall inspection crashed on tool {tool_name}: {str(e)}")
             return False, f"System Error: Firewall failed safety checks -> {str(e)}"

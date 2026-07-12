@@ -1,0 +1,28 @@
+{
+  "cv_auc_mean": 0.9403,
+  "cv_auc_std": 0.0391,
+  "cv_auc_ci_low": 0.862,
+  "cv_auc_ci_high": 1.0185,
+  "n_folds": 10,
+  "evasion_accuracy": 0.8333,
+  "evasion_misses": 2,
+  "evasion_n": 12,
+  "label_leak_removed": true,
+  "features_used": [
+    "path_traversal",
+    "blocked_binary",
+    "pipe_to_shell",
+    "subshell",
+    "base64_decode",
+    "network_fetch",
+    "injection_keyword",
+    "write_sensitive",
+    "env_exfil",
+    "jailbreak_phrase",
+    "eval_exec",
+    "payload_length",
+    "shannon_entropy",
+    "special_char_ratio",
+    "newline_count"
+  ]
+}

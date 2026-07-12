@@ -35,15 +35,15 @@
   },
   "latency": {
     "trials": 2000,
-    "benign_median_us": 12.04,
-    "benign_p95_us": 14.38,
-    "benign_p99_us": 20.5,
-    "benign_p999_us": 91.08,
-    "benign_mean_us": 12.52,
-    "exploit_median_us": 21.62,
-    "exploit_p95_us": 23.71,
-    "exploit_p99_us": 30.5,
-    "cold_median_us": 13.54,
+    "benign_median_us": 11.71,
+    "benign_p95_us": 13.71,
+    "benign_p99_us": 20.29,
+    "benign_p999_us": 32.21,
+    "benign_mean_us": 12.07,
+    "exploit_median_us": 21.29,
+    "exploit_p95_us": 27.96,
+    "exploit_p99_us": 35.58,
+    "cold_median_us": 12.42,
     "verdict": "REAL \u2014 measured with perf_counter_ns, N=2000, post-warmup"
   },
   "cache": {
@@ -68,10 +68,10 @@
     "verdict": "REAL \u2014 deterministic structural comparison, not embedding-based semantics"
   },
   "ml": {
-    "cv_auc_mean": 0.7935,
-    "cv_auc_std": 0.0419,
-    "cv_auc_ci_low": 0.7096,
-    "cv_auc_ci_high": 0.8774,
+    "cv_auc_mean": 0.9403,
+    "cv_auc_std": 0.0391,
+    "cv_auc_ci_low": 0.862,
+    "cv_auc_ci_high": 1.0185,
     "n_folds": 10,
     "evasion_accuracy": 0.8333,
     "evasion_misses": 2,
@@ -88,7 +88,11 @@
       "write_sensitive",
       "env_exfil",
       "jailbreak_phrase",
-      "eval_exec"
+      "eval_exec",
+      "payload_length",
+      "shannon_entropy",
+      "special_char_ratio",
+      "newline_count"
     ]
   },
   "ood_evaluation": {

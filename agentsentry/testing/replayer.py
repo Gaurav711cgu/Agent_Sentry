@@ -88,74 +88,88 @@ class TrajectoryReplayer:
 
     def analyze_trajectory_drift(self, semantic_threshold: float = 0.85) -> Dict[str, Any]:
         """
-        Analyzes trajectory drift including Semantic Drift Tracking.
+        Detects argument-divergence drift between a reference trajectory and
+        the current replay session.
+
+        Two levels of comparison:
+          1. Structural: action name mismatch → immediate drift
+          2. Argument: JSON string divergence → cosine similarity below threshold
+
+        Note: the similarity metric is bag-of-words cosine on JSON strings,
+        not embedding-based semantic similarity.
         """
         if not self.reference_trajectory:
-            return {"drift_detected": False, "similarity_ratio": 1.0, "reason": "No reference trajectory loaded."}
+            return {"drift_detected": False, "similarity_ratio": 1.0,
+                    "reason": "No reference trajectory loaded."}
 
         drift_points = []
         drift_detected = False
 
         min_length = min(len(self.reference_trajectory), len(self.current_trajectory))
         for i in range(min_length):
-            ref = self.reference_trajectory[i]
+            ref  = self.reference_trajectory[i]
             curr = self.current_trajectory[i]
 
+            # Level 1: action name mismatch
             if ref["type"] != curr["type"] or ref["action"] != curr["action"]:
                 drift_detected = True
                 drift_points.append({
                     "step": i + 1,
-                    "reason": "Execution sequence action mismatch",
-                    "reference": f"Type: {ref['type']}, Action: {ref['action']}",
-                    "current": f"Type: {curr['type']}, Action: {curr['action']}"
+                    "reason": "Action sequence mismatch",
+                    "reference": f"{ref['type']}/{ref['action']}",
+                    "current":   f"{curr['type']}/{curr['action']}",
                 })
                 break
 
-            if ref["type"] == "tool_call" and ref["action"] == curr["action"]:
-                ref_args = ref["data"].get("arguments", {})
+            # Level 2: argument divergence (for tool_call steps)
+            if ref["type"] == "tool_call":
+                ref_args  = ref["data"].get("arguments", {})
                 curr_args = curr["data"].get("arguments", {})
-                
-                # Semantic Drift Check
-                ref_str = json.dumps(ref_args, sort_keys=True)
-                curr_str = json.dumps(curr_args, sort_keys=True)
-                
-                if ref_str != curr_str:
-                    semantic_score = _compute_cosine_similarity(ref_str, curr_str)
-                    
-                    if semantic_score < semantic_threshold:
+
+                if ref_args != curr_args:
+                    ref_str  = json.dumps(ref_args,  sort_keys=True)
+                    curr_str = json.dumps(curr_args, sort_keys=True)
+                    sim = _compute_cosine_similarity(ref_str, curr_str)
+
+                    if sim < semantic_threshold:
                         drift_detected = True
                         drift_points.append({
-                            "step": i + 1,
-                            "reason": "Semantic Drift detected in tool arguments",
-                            "semantic_score": semantic_score,
-                            "reference_args": ref_args,
-                            "current_args": curr_args
+                            "step":            i + 1,
+                            "reason":          "Argument divergence detected",
+                            "similarity":      round(sim, 4),
+                            "reference_args":  ref_args,
+                            "current_args":    curr_args,
                         })
                     else:
-                        logger.info(f"Step {i+1}: Minor variance tolerated (score: {semantic_score:.2f} >= {semantic_threshold})")
+                        logger.info(f"Step {i+1}: minor arg variance tolerated (sim={sim:.3f})")
 
+        # Length mismatch
         if not drift_detected and len(self.reference_trajectory) != len(self.current_trajectory):
             drift_detected = True
             drift_points.append({
-                "step": min_length + 1,
-                "reason": "Trajectory sequence length mismatch",
-                "reference_steps": len(self.reference_trajectory),
-                "current_steps": len(self.current_trajectory)
+                "step":             min_length + 1,
+                "reason":           "Trajectory length mismatch",
+                "reference_steps":  len(self.reference_trajectory),
+                "current_steps":    len(self.current_trajectory),
             })
 
-        matching_steps = 0
-        for i in range(min_length):
-            ref = self.reference_trajectory[i]
-            curr = self.current_trajectory[i]
-            if ref["type"] == curr["type"] and ref["action"] == curr["action"]:
-                matching_steps += 1
-
-        total_max_steps = max(len(self.reference_trajectory), len(self.current_trajectory))
-        similarity = (matching_steps / total_max_steps) if total_max_steps > 0 else 1.0
+        # Similarity ratio = matching steps / max steps
+        matching = sum(
+            1 for i in range(min_length)
+            if (self.reference_trajectory[i]["type"]   == self.current_trajectory[i]["type"] and
+                self.reference_trajectory[i]["action"] == self.current_trajectory[i]["action"] and
+                self.reference_trajectory[i]["data"].get("arguments", {}) ==
+                self.current_trajectory[i]["data"].get("arguments", {}))
+        )
+        total = max(len(self.reference_trajectory), len(self.current_trajectory))
+        similarity = matching / total if total > 0 else 1.0
 
         return {
-            "drift_detected": drift_detected,
-            "similarity_ratio": similarity,
-            "semantic_threshold_used": semantic_threshold,
-            "drift_points": drift_points
+            "drift_detected":          drift_detected,
+            "similarity_ratio":        similarity,
+            "similarity_threshold":    semantic_threshold,
+            "drift_points":            drift_points,
+            "matching_steps":          matching,
+            "total_steps_compared":    total,
         }
+

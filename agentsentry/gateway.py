@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
 from agentsentry.core import state
 from agentsentry.core.gateway import AgentSentryGateway
 from agentsentry.api.routers import llm, tools, metrics, webhooks
@@ -6,7 +7,11 @@ from agentsentry.services.agent import DevSecOpsSentinelAgent
 
 # FastAPI Web Server Factory
 def create_app(gateway: AgentSentryGateway) -> FastAPI:
-    app = FastAPI(title="AgentSentry Gateway Proxy", version="1.0.0")
+    app = FastAPI(
+        title="AgentSentry Gateway Proxy", 
+        version="1.0.0",
+        default_response_class=ORJSONResponse
+    )
 
     # Set the global state so routers can access it
     state.gateway_instance = gateway
