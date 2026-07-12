@@ -1,0 +1,100 @@
+{
+  "firewall": {
+    "by_category": {
+      "LLM01": {
+        "blocked": 41,
+        "missed": 44,
+        "deflection_pct": 48.24
+      },
+      "LLM02": {
+        "blocked": 19,
+        "missed": 85,
+        "deflection_pct": 18.27
+      },
+      "LLM03": {
+        "blocked": 55,
+        "missed": 0,
+        "deflection_pct": 100.0
+      },
+      "LLM04": {
+        "blocked": 10,
+        "missed": 0,
+        "deflection_pct": 100.0
+      },
+      "LLM06": {
+        "blocked": 96,
+        "missed": 4,
+        "deflection_pct": 96.0
+      }
+    },
+    "overall_deflection_pct": 62.43,
+    "false_positive_rate_pct": 0.0,
+    "fw_exploits_tested": 354,
+    "benign_tested": 50,
+    "verdict": "REAL \u2014 per-category breakdown shows honest gaps"
+  },
+  "latency": {
+    "trials": 2000,
+    "benign_median_us": 12.04,
+    "benign_p95_us": 14.38,
+    "benign_p99_us": 20.5,
+    "benign_p999_us": 91.08,
+    "benign_mean_us": 12.52,
+    "exploit_median_us": 21.62,
+    "exploit_p95_us": 23.71,
+    "exploit_p99_us": 30.5,
+    "cold_median_us": 13.54,
+    "verdict": "REAL \u2014 measured with perf_counter_ns, N=2000, post-warmup"
+  },
+  "cache": {
+    "sessions": 50,
+    "turns_per_session": 6,
+    "avg_savings_all_turns_pct": 63.65,
+    "avg_savings_excl_turn1_pct": 76.38,
+    "per_turn_avg_pct": {
+      "1": 0.0,
+      "2": 67.53,
+      "3": 72.93,
+      "4": 79.88,
+      "5": 77.99,
+      "6": 83.56
+    },
+    "verdict": "PARTIAL \u2014 measures prefix char savings in our proxy layer. Real KV-cache token savings require actual LLM API calls."
+  },
+  "drift": {
+    "test_cases": 4,
+    "correct": 2,
+    "accuracy_pct": 50.0,
+    "verdict": "REAL \u2014 deterministic structural comparison, not embedding-based semantics"
+  },
+  "ml": {
+    "cv_auc_mean": 0.7935,
+    "cv_auc_std": 0.0419,
+    "cv_auc_ci_low": 0.7096,
+    "cv_auc_ci_high": 0.8774,
+    "n_folds": 10,
+    "evasion_accuracy": 0.8333,
+    "evasion_misses": 2,
+    "evasion_n": 12,
+    "label_leak_removed": true,
+    "features_used": [
+      "path_traversal",
+      "blocked_binary",
+      "pipe_to_shell",
+      "subshell",
+      "base64_decode",
+      "network_fetch",
+      "injection_keyword",
+      "write_sensitive",
+      "env_exfil",
+      "jailbreak_phrase",
+      "eval_exec"
+    ]
+  },
+  "ood_evaluation": {
+    "source": "https://github.com/leondz/garak",
+    "total_probes": 8382,
+    "llm02_injection_rate_pct": 44.32,
+    "llm01_indirect_rate_pct": 86.67
+  }
+}

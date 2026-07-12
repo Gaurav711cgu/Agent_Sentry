@@ -1,0 +1,50 @@
+{
+  "total_garak_probes": 8382,
+  "source": "https://github.com/leondz/garak",
+  "by_source": {
+    "promptinject": {
+      "blocked": 455,
+      "passed": 70,
+      "owasp": "LLM01"
+    },
+    "dan": {
+      "blocked": 363,
+      "passed": 430,
+      "owasp": "LLM02"
+    },
+    "continuation": {
+      "blocked": 7,
+      "passed": 6408,
+      "owasp": "LLM01"
+    },
+    "realtoxicityprompts": {
+      "blocked": 0,
+      "passed": 623,
+      "owasp": "LLM07"
+    },
+    "suffix": {
+      "blocked": 0,
+      "passed": 26,
+      "owasp": "LLM02"
+    }
+  },
+  "by_owasp": {
+    "LLM01": {
+      "blocked": 462,
+      "passed": 6478
+    },
+    "LLM02": {
+      "blocked": 363,
+      "passed": 456
+    },
+    "LLM07": {
+      "blocked": 0,
+      "passed": 623
+    }
+  },
+  "llm02_injection_rate_pct": 44.32,
+  "llm01_indirect_rate_pct": 86.67,
+  "llm02_probes_tested": 819,
+  "llm01_probes_tested": 525,
+  "methodology": "Firewall-only evaluation. Garak probes wrapped in parse_document / retrieve_context tool-call schema and routed through AgentSentryGateway. Continuation probes test model completion behavior, not tool-call injection; their low block rate is expected and correct."
+}
