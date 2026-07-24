@@ -6,11 +6,11 @@
 [![Pytest](https://img.shields.io/badge/Pytest-6%2F6%20Passed-0A9EDC?style=flat-square&logo=pytest&logoColor=white)](./tests)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](./LICENSE)
 
-AgentSentry is a high-performance security and optimization gateway for autonomous LLM agents. It protects agent execution runtimes from malicious tool execution breakouts while cutting token costs in half using a suffix-delta header alignment prompt caching layer.
+AgentSentry is a security and optimization gateway for autonomous LLM agents. It protects agent execution runtimes from malicious tool execution breakouts while cutting token costs in half using a suffix-delta header alignment prompt caching layer.
 
 ---
 
-## 📊 Measured Performance & Security Benchmarks
+## Measured Performance & Security Benchmarks
 
 Evaluated against the **OWASP LLM Top-10 (2025) exploit dataset** and a 1,000-trial latency benchmark:
 
@@ -27,7 +27,7 @@ Evaluated against the **OWASP LLM Top-10 (2025) exploit dataset** and a 1,000-tr
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```mermaid
 graph TD
@@ -43,7 +43,7 @@ graph TD
 
 ---
 
-## 💡 Key Capabilities
+## Key Capabilities
 
 ### 1. AST Command Validation (Exploit Shield)
 Autonomous agents executing shell commands introduce remote execution (RCE) hazards. AgentSentry recursively checks command structures before execution:
@@ -65,7 +65,7 @@ Prompt changes can cause agent trajectories to drift, resulting in tool-use fail
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```yaml
 agentsentry/
@@ -86,7 +86,7 @@ agentsentry/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Installation
 Clone the repository and install dependencies:
@@ -110,7 +110,7 @@ uvicorn main:app --host 0.0.0.0 --port 8080
 
 ---
 
-## 🧪 Running Security & Cache Tests
+## Running Security & Cache Tests
 
 To run unit tests and execute the exploit benchmark suite:
 ```bash
@@ -119,5 +119,5 @@ pytest tests/ -v
 
 ---
 
-## 📜 License
+## License
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
