@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request, HTTPException, BackgroundTasks
 import logging
 from pydantic import BaseModel, Field
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 logger = logging.getLogger("AgentSentry.Webhooks")
 router = APIRouter()

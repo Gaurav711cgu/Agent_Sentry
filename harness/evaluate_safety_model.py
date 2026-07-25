@@ -11,7 +11,9 @@ Problems with the original evaluation:
 Run:
     python3 harness/evaluate_safety_model.py
 """
-import sys, os, json
+import sys
+import os
+import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
@@ -19,9 +21,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import roc_auc_score
 
-from agentsentry.ml import extract_features, FEATURE_NAMES, _OWASP_CATEGORY_MAP
+from agentsentry.ml import extract_features, FEATURE_NAMES
 
 # ── 1. Drop the label-leaking feature ────────────────────────────────────────
 

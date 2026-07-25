@@ -14,7 +14,12 @@ the firewall against it directly.
 
 Output: harness/garak_ood_probes.json
 """
-import sys, os, json, importlib, inspect
+import sys
+import os
+import json
+import importlib
+import inspect
+from collections import Counter
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -120,7 +125,6 @@ with open(out_path, "w") as f:
 print(f"[+] Saved {len(exploits)} Garak OOD probes to {out_path}")
 
 # ── Print category breakdown ──────────────────────────────────────────────────
-from collections import Counter
 cats = Counter(e["owasp_category"] for e in exploits)
 tools = Counter(e["tool"] for e in exploits)
 print("\nBreakdown by OWASP category:")

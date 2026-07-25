@@ -1,6 +1,5 @@
 import logging
 import gitlab
-from typing import Dict, Any, List
 from agentsentry.config import AgentSentryConfig
 
 logger = logging.getLogger("AgentSentry.GitLabMCP")

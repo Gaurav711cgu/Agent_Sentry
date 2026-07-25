@@ -19,7 +19,7 @@ def compile_report_markdown(
     report.append(f"**Verification Status:** <span style='color:{status_color}; font-weight:bold'>{decision}</span>")
     report.append(f"**Details:** {reason}\n")
     report.append("---")
-    report.append(f"### 🛡️ Static Vulnerability Review")
+    report.append("### 🛡️ Static Vulnerability Review")
     report.append(f"* **Code Safety Score:** `{static_score} / 10.0`\n")
     
     if vulnerabilities:
@@ -32,12 +32,12 @@ def compile_report_markdown(
         report.append("🎉 No static vulnerabilities detected.")
         
     report.append("---")
-    report.append(f"### 🧪 Dynamic Sandbox Execution")
+    report.append("### 🧪 Dynamic Sandbox Execution")
     if test_command:
         report.append(f"* **Command Invoked:** `{test_command}`")
         if sandbox_logs:
             if sandbox_logs.get("status") == "blocked":
-                report.append(f"* **Status:** 🔴 **BLOCKED (Security Deflection)**")
+                report.append("* **Status:** 🔴 **BLOCKED (Security Deflection)**")
                 report.append(f"* **Reason:** `{sandbox_logs.get('reason')}`")
             else:
                 status_emoji = "🟢 Pass" if sandbox_logs.get("return_code") == 0 else "🔴 Fail"

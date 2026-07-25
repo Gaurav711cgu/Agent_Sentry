@@ -7,7 +7,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from agentsentry.config import AgentSentryConfig
 from agentsentry.gateway import AgentSentryGateway
-from agentsentry.testing.replayer import TrajectoryReplayer
 
 def load_dataset(filepath: str) -> dict:
     with open(filepath, 'r') as f:
@@ -134,16 +133,16 @@ def run_drift_benchmark(config: AgentSentryConfig, trace_file: str) -> dict:
     # 2. Simulate a Replay session with NO changes (should match 100%)
     replay_gateway_matching = AgentSentryGateway(config, trace_file, is_replay_mode=True)
     asyncio.run(replay_gateway_matching.initialize_async())
-    res_match_1 = replay_gateway_matching.route_tool_call("list_dir", {"path": "src"})
-    res_match_2 = replay_gateway_matching.route_tool_call("read_file", {"path": "src/app/page.tsx"})
+    replay_gateway_matching.route_tool_call("list_dir", {"path": "src"})
+    replay_gateway_matching.route_tool_call("read_file", {"path": "src/app/page.tsx"})
     
     drift_matching = replay_gateway_matching.replayer.analyze_trajectory_drift()
 
     # 3. Simulate a Replay session WITH drift (different tool called at step 2)
     replay_gateway_drifting = AgentSentryGateway(config, trace_file, is_replay_mode=True)
     asyncio.run(replay_gateway_drifting.initialize_async())
-    res_drift_1 = replay_gateway_drifting.route_tool_call("list_dir", {"path": "src"})
-    res_drift_2 = replay_gateway_drifting.route_tool_call("read_file", {"path": "src/app/globals.css"}) # different argument
+    replay_gateway_drifting.route_tool_call("list_dir", {"path": "src"})
+    replay_gateway_drifting.route_tool_call("read_file", {"path": "src/app/globals.css"}) # different argument
     
     drift_analysis = replay_gateway_drifting.replayer.analyze_trajectory_drift()
 
@@ -203,7 +202,7 @@ def run_reward_model_benchmark(dataset_path: str) -> dict:
     """
     print("\nTraining Safety Score Reward Model...")
     try:
-        from agentsentry.ml import train, save_model, FEATURE_NAMES
+        from agentsentry.ml import train, save_model
     except ImportError as e:
         print(f"  [SKIP] sklearn not installed: {e}")
         return {"auc_roc": None, "note": "sklearn not installed"}
@@ -217,7 +216,7 @@ def run_reward_model_benchmark(dataset_path: str) -> dict:
 
     print(f"  AUC-ROC: {auc:.4f}")
     print(f"  Exploit class  → precision={precision_exploit:.3f}, recall={recall_exploit:.3f}, f1={f1_exploit:.3f}")
-    print(f"  Model saved to harness/safety_model.pkl")
+    print("  Model saved to harness/safety_model.pkl")
 
     return {
         "auc_roc": round(auc, 4),
@@ -275,11 +274,11 @@ def main():
 
     # ── Build Markdown report ─────────────────────────────────────────────────
 
-    auc_str  = f"{ml_results['auc_roc']:.4f}"  if ml_results.get("auc_roc") else "N/A (sklearn not installed)"
+    f"{ml_results['auc_roc']:.4f}"  if ml_results.get("auc_roc") else "N/A (sklearn not installed)"
     fp_str   = f"{sec_results['false_positive_rate']:.2f}%"
     tpr_str  = f"{sec_results['exploit_deflection']:.2f}%"
-    med_str  = f"{latency_results['median_us']:.1f}µs"
-    p99_str  = f"{latency_results['p99_us']:.1f}µs"
+    f"{latency_results['median_us']:.1f}µs"
+    f"{latency_results['p99_us']:.1f}µs"
     n_exp    = sec_results['true_positives'] + sec_results['false_negatives']
     n_ben    = sec_results['true_negatives'] + sec_results['false_positives']
 

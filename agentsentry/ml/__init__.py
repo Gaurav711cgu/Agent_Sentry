@@ -24,6 +24,8 @@ import json
 import os
 import re
 import pickle
+import math
+from collections import Counter
 from typing import Dict, Any, Tuple, List
 
 import numpy as np
@@ -84,17 +86,16 @@ def _arg_text(arguments: Dict[str, Any]) -> str:
             parts.append(json.dumps(v))
     return " ".join(parts)
 
-import math
-from collections import Counter
-
 def shannon_entropy(text: str) -> float:
-    if not text: return 0.0
+    if not text:
+        return 0.0
     freq = Counter(text)
     length = len(text)
     return -sum((count / length) * math.log2(count / length) for count in freq.values())
 
 def special_char_ratio(text: str) -> float:
-    if not text: return 0.0
+    if not text:
+        return 0.0
     return sum(1 for c in text if not c.isalnum() and not c.isspace()) / len(text)
 
 def extract_features(tool_name: str, arguments: Dict[str, Any],

@@ -11,13 +11,15 @@ Checks each pillar for:
 Run:
     python3 harness/audit_all_metrics.py
 """
-import sys, os, json, time, asyncio, math
+import sys
+import os
+import json
+import time
+import asyncio
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from agentsentry.config import AgentSentryConfig
 from agentsentry.gateway import AgentSentryGateway
-from agentsentry.firewall.core import AgentFirewall
-from agentsentry.firewall.signature import SignatureMatcher
 from agentsentry.cache.differential import SuffixDeltaCompressor
 
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -163,7 +165,7 @@ e_med  = percentile(exploit_times, 50)
 e_p95  = percentile(exploit_times, 95)
 e_p99  = percentile(exploit_times, 99)
 
-print(f"\n  Payload         Median     p95     p99    p99.9    mean")
+print("\n  Payload         Median     p95     p99    p99.9    mean")
 print(f"  {'─'*55}")
 print(f"  Benign (read)  {b_med:>6.1f}µs {b_p95:>6.1f}µs {b_p99:>6.1f}µs {b_p999:>7.1f}µs {b_mean:>6.1f}µs")
 print(f"  Exploit (cmd)  {e_med:>6.1f}µs {e_p95:>6.1f}µs {e_p99:>6.1f}µs  {'N/A':>7}  N/A")
@@ -172,7 +174,7 @@ print(f"\n  Trials per payload: {TRIALS:,}  |  Warmup: {WARMUP}")
 print(f"  {PASS if b_med < 100 else WARN} Median {b_med:.1f}µs is {'well under' if b_med < 50 else 'under'} 100µs target")
 print(f"  {PASS if b_p99 < 500 else WARN} p99 {b_p99:.1f}µs")
 print(f"  {WARN} This is Python CPython overhead — not sub-µs C extension performance.")
-print(f"       A Rust/C implementation of the same logic would be ~10–50x faster.")
+print("       A Rust/C implementation of the same logic would be ~10–50x faster.")
 
 results["latency"] = {
     "trials": TRIALS,
@@ -240,23 +242,23 @@ avg_savings = sum(all_savings) / len(all_savings) * 100
 print(f"\n  Sessions simulated: {SESSIONS}")
 print(f"  Turns per session: {TURNS_PER_SESSION}")
 print(f"  Total measurements: {len(all_savings)}")
-print(f"\n  Turn  Avg Savings   (interpretation)")
+print("\n  Turn  Avg Savings   (interpretation)")
 print(f"  {'─'*48}")
 for t in range(1, TURNS_PER_SESSION + 1):
     avg = sum(per_turn_savings[t]) / len(per_turn_savings[t]) * 100
     note = "(first call — no prefix cached)" if t == 1 else f"(prefix from {t-1} prior turns cached)"
     print(f"  {t:>4}  {avg:>8.1f}%   {note}")
 
-print(f"\n  Overall avg savings (excl. turn 1): ", end="")
+print("\n  Overall avg savings (excl. turn 1): ", end="")
 excl_first = [s for t in range(2, TURNS_PER_SESSION+1) for s in per_turn_savings[t]]
 avg_excl = sum(excl_first) / len(excl_first) * 100
 print(f"{avg_excl:.1f}%")
 
-print(f"\n  WHAT THIS ACTUALLY MEASURES:")
-print(f"    - Pure prefix-string match savings in chars (not real KV-cache tokens)")
-print(f"    - Real LLM KV-cache savings require an API call to Anthropic/OpenAI")
-print(f"    - This proxy correctly structures prompts to ENABLE caching — but the")
-print(f"      actual token savings happen inside the model's inference stack")
+print("\n  WHAT THIS ACTUALLY MEASURES:")
+print("    - Pure prefix-string match savings in chars (not real KV-cache tokens)")
+print("    - Real LLM KV-cache savings require an API call to Anthropic/OpenAI")
+print("    - This proxy correctly structures prompts to ENABLE caching — but the")
+print("      actual token savings happen inside the model's inference stack")
 print(f"  {WARN} Honest claim: 'structures prompts to maximize prefix reuse'")
 print(f"  {WARN} Not honest: 'achieves X% cache hit rate' (you can't measure that here)")
 
@@ -304,7 +306,6 @@ DRIFT_CASES = [
      "read_file", {"path": "src/app/page.tsx"}, False),  # then adds a 3rd step
 ]
 
-from agentsentry.testing.recorder import TrajectoryRecorder
 
 print(f"\n  {'Test case':<35} {'Expect':>8} {'Got':>8} {'Status':>8}")
 print(f"  {'─'*65}")
@@ -339,10 +340,10 @@ for desc, t1, a1, t2, a2, expect_drift in DRIFT_CASES:
     print(f"  {desc:<35} {'True' if expect_drift else 'False':>8} {'True' if got_drift else 'False':>8} {status:>8}")
 
 print(f"\n  Accuracy: {drift_correct}/{drift_total}")
-print(f"\n  WHAT THIS ACTUALLY MEASURES:")
-print(f"    - Structural replay: tool name + args JSON equality")
-print(f"    - 'Semantic' similarity is bag-of-words cosine on JSON strings")
-print(f"    - NOT semantic embedding similarity (no language model involved)")
+print("\n  WHAT THIS ACTUALLY MEASURES:")
+print("    - Structural replay: tool name + args JSON equality")
+print("    - 'Semantic' similarity is bag-of-words cosine on JSON strings")
+print("    - NOT semantic embedding similarity (no language model involved)")
 print(f"  {WARN} Rename 'Semantic Drift' → 'Argument-Divergence Detection' in resume")
 
 results["drift"] = {
@@ -366,12 +367,12 @@ if os.path.exists(ml_eval_path):
     print(f"\n  10-fold CV AUC:   {ml['cv_auc_mean']:.4f} ± {ml['cv_auc_std']:.4f}")
     print(f"  95% CI:           [{ml['cv_auc_ci_low']:.4f}, {ml['cv_auc_ci_high']:.4f}]")
     print(f"  Evasion accuracy: {ml['evasion_accuracy']:.2%} ({ml['evasion_n'] - ml['evasion_misses']}/{ml['evasion_n']} correct)")
-    print(f"\n  WHAT THIS ACTUALLY MEASURES:")
-    print(f"    - Logistic regression on 11 binary/numeric features extracted from tool-call payloads")
-    print(f"    - Features are rule-derived (regex patterns) — same distribution as training data")
-    print(f"    - Benign samples have near-zero feature activation → classifier boundary is coarse")
+    print("\n  WHAT THIS ACTUALLY MEASURES:")
+    print("    - Logistic regression on 11 binary/numeric features extracted from tool-call payloads")
+    print("    - Features are rule-derived (regex patterns) — same distribution as training data")
+    print("    - Benign samples have near-zero feature activation → classifier boundary is coarse")
     print(f"    - A real adversarial payload (paraphrase/unicode) achieves {ml['evasion_accuracy']:.0%} evasion on LR layer")
-    print(f"      but deterministic firewall rules still block it at the rule level")
+    print("      but deterministic firewall rules still block it at the rule level")
     print(f"  {PASS if ml['cv_auc_mean'] >= 0.75 else WARN} AUC {ml['cv_auc_mean']:.4f} is credible (not leaked)")
     print(f"  {WARN} Claim: 'Rule-augmented logistic classifier, AUC {ml['cv_auc_mean']:.2f} ± {ml['cv_auc_std']:.2f} (10-fold CV)'")
     results["ml"] = ml

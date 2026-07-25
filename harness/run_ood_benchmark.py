@@ -18,7 +18,10 @@ We report per-category rates so the distinction is transparent.
 Run:
     python3 harness/run_ood_benchmark.py
 """
-import sys, os, json
+import sys
+import os
+import json
+from collections import defaultdict
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from agentsentry.config import AgentSentryConfig
@@ -38,8 +41,6 @@ print(f"Garak OOD probe set: {len(exploits)} payloads")
 print(f"Source: {data['source']}\n")
 
 # ── Per-category evaluation ───────────────────────────────────────────────────
-from collections import defaultdict
-
 by_source = defaultdict(lambda: {"blocked": 0, "passed": 0, "owasp": ""})
 by_cat    = defaultdict(lambda: {"blocked": 0, "passed": 0})
 

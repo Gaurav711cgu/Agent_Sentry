@@ -4,3 +4,12 @@ from .path_containment import PathContainmentValidator
 from .signature import SignatureMatcher
 from .ast_analyzer import CommandASTAnalyzer
 from .sandbox import SandboxedExecutor
+
+__all__ = [
+    "AgentFirewall",
+    "ObfuscationDecoder",
+    "PathContainmentValidator",
+    "SignatureMatcher",
+    "CommandASTAnalyzer",
+    "SandboxedExecutor",
+]

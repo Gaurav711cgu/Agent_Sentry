@@ -1,6 +1,5 @@
 import argparse
 import sys
-import os
 import uvicorn
 import logging
 
@@ -68,7 +67,7 @@ def main():
     init_parser.add_argument("--output", "-o", type=str, default="config/default_policy.json", help="Output path for config JSON")
 
     # Benchmark subcommand
-    benchmark_parser = subparsers.add_parser("benchmark", help="Triggers verification benchmark harness checks")
+    subparsers.add_parser("benchmark", help="Triggers verification benchmark harness checks")
 
     args = parser.parse_args()
 

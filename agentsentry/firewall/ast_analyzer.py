@@ -1,7 +1,6 @@
 import shlex
 import re
-import os
-from typing import List, Tuple, Dict, Any
+from typing import List
 
 class CommandASTAnalyzer:
     def __init__(self):

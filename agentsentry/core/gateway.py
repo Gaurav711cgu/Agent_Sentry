@@ -2,7 +2,7 @@ import time
 import logging
 import random
 import asyncio
-from typing import Dict, Any, Tuple, Optional, List
+from typing import Dict, Any, Tuple
 
 from agentsentry.config import AgentSentryConfig
 from agentsentry.firewall import AgentFirewall

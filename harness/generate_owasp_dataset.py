@@ -135,7 +135,7 @@ dataset_payload = {
 with open(dataset_path, "w") as f:
     json.dump(dataset_payload, f, indent=2)
 
-print(f"Generated 10,000+ dataset payload:")
+print("Generated 10,000+ dataset payload:")
 print(f"  Total Exploits: {len(exploits)} across OWASP LLM01-LLM07")
 print(f"  Total Benign:   {len(benign)}")
 print(f"  Saved to:       {dataset_path} ({os.path.getsize(dataset_path) / (1024*1024):.2f} MB)")

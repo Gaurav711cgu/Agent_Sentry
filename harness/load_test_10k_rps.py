@@ -1,6 +1,5 @@
 import asyncio
 import time
-import json
 import argparse
 import sys
 try:
