@@ -232,13 +232,8 @@ def main():
     
     # Define absolute file paths relative to setup.py location
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    dataset_file = os.path.join(project_root, "harness/exploit_dataset_owasp.json")
-
-    # Fallback to original dataset if OWASP one doesn't exist yet
-    if not os.path.exists(dataset_file):
-        dataset_file = os.path.join(project_root, "harness/exploit_dataset.json")
-        print(f"[!] OWASP dataset not found. Using original: {dataset_file}")
-        print("[!] Run: python3 harness/generate_owasp_dataset.py  to generate it first.")
+    dataset_file = os.path.join(project_root, "harness/exploit_dataset.json")
+    print(f"Loading 10,000+ dataset payload: {dataset_file}")
 
     trace_file = os.path.join(project_root, "trace_cache/trajectory_test.json")
 
