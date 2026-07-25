@@ -144,8 +144,8 @@ def extract_features(tool_name: str, arguments: Dict[str, Any],
                                 r"\bsubprocess\.(run|call|Popen)\b|"
                                 r"child_process|execSync", tl)))
 
-    # 12. OWASP category code
-    f12 = float(_OWASP_CATEGORY_MAP.get(owasp_category, 0))
+    # 12. Argument token count
+    f12 = float(len(text.split()))
 
     # Statistical and structural features
     f13 = float(len(text))
@@ -159,7 +159,7 @@ def extract_features(tool_name: str, arguments: Dict[str, Any],
 FEATURE_NAMES = [
     "path_traversal", "blocked_binary", "pipe_to_shell", "subshell",
     "base64_decode", "network_fetch", "injection_keyword", "write_sensitive",
-    "env_exfil", "jailbreak_phrase", "eval_exec", "owasp_category_code",
+    "env_exfil", "jailbreak_phrase", "eval_exec", "token_count",
     "payload_length", "shannon_entropy", "special_char_ratio", "newline_count"
 ]
 
@@ -173,8 +173,7 @@ def train(dataset_path: str) -> Tuple[Pipeline, float, Dict]:
     X, y = [], []
     for entry in data["exploits"]:
         feats = extract_features(
-            entry["tool"], entry["arguments"],
-            entry.get("owasp_category", "")
+            entry["tool"], entry["arguments"]
         )
         X.append(feats)
         y.append(1)
