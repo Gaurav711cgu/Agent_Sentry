@@ -30,11 +30,11 @@ Evaluated against the **OWASP LLM Top-10 (2025) exploit dataset** across **10,00
 ## 🏗️ System Architecture
 
 ```mermaid
-graph TD
+flowchart TD
     A["Agent Runtime Engine"] -->|Executes Tool Command| B["AgentSentry Gateway Middleware"]
     B -->|Parse Command AST| C{"Recursive AST Scanner"}
-    C -->|Unsafe syntax or subshell breakout| D["Block & Log Exploit Alert"]
-    C -->|Safe command payload| E["Docker Execution Sandbox"]
+    C -->|Unsafe Syntax| D["Block & Log Exploit Alert"]
+    C -->|Safe Payload| E["Docker Execution Sandbox"]
     
     A -->|LLM API Invocation| F["Prompt Hashing Layer"]
     F -->|Suffix-Delta Reordering| G["Aligned System Prompt Cache"]
