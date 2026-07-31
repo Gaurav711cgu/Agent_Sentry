@@ -10,7 +10,7 @@ AgentSentry is an enterprise-grade security firewall and optimization gateway fo
 
 ---
 
-## ⚡ Empirical Performance & Security Benchmarks
+## Empirical Performance & Security Benchmarks
 
 Evaluated against the **OWASP LLM Top-10 (2025) exploit dataset** across **10,000+ payload variations** (7,500 OWASP LLM01-LLM07 exploits + 2,500 benign operational tool calls) and a 1,000-trial latency benchmark:
 
@@ -27,7 +27,7 @@ Evaluated against the **OWASP LLM Top-10 (2025) exploit dataset** across **10,00
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 ```mermaid
 flowchart TD
@@ -43,7 +43,7 @@ flowchart TD
 
 ---
 
-## 🔥 Key Capabilities
+##  Key Capabilities
 
 ### 1. AST Command Validation (Exploit Shield)
 Autonomous agents executing shell commands introduce remote code execution (RCE) hazards. AgentSentry recursively checks command structures before execution:
@@ -65,7 +65,7 @@ Prompt changes can cause agent trajectories to drift, resulting in tool-use fail
 
 ---
 
-## 📂 Repository Structure
+##  Repository Structure
 
 ```yaml
 agentsentry/
@@ -87,7 +87,7 @@ agentsentry/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### 1. Installation
 Clone the repository and install dependencies:
