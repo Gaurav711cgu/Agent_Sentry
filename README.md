@@ -10,7 +10,7 @@ AgentSentry is an enterprise-grade security firewall and optimization gateway fo
 
 ---
 
-## Executive Summary & Recruiters' Highlight
+## Executive Summary & Technical Overview
 
 > **AgentSentry** secures LLM agents against Remote Code Execution (RCE), prompt injection obfuscations, and resource exhaustion attacks. Built with a **4-layer defense model**, the platform intercepts malicious tool calls at the OS kernel level via `seccomp-bpf`, decodes Base64/Hex obfuscations, normalizes Cyrillic/Greek homoglyph characters, and enforces strict POSIX `rlimits` on child process execution.
 
@@ -24,7 +24,7 @@ AgentSentry is an enterprise-grade security firewall and optimization gateway fo
 
 ---
 
-## 🛡️ 4-Layer Security Architecture
+## 4-Layer Security Architecture
 
 ```mermaid
 flowchart TD
@@ -38,21 +38,21 @@ flowchart TD
 
 ---
 
-## ⚡ Empirical Security & Performance Benchmarks
+## Empirical Security & Performance Benchmarks
 
 > Evaluated against the **OWASP LLM Top-10 exploit dataset** across **10,000+ payload variations** (7,500 exploits + 2,500 benign operational commands):
 
 | Metric Category | Measured Metric | Benchmark Result | Target SLA | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **AST Scan Latency** | Median Latency | **13.90 µs** | $\le 15.00\text{ µs}$ | <span style="color:green;font-weight:bold;">PASSED</span> |
-| **AST Scan Latency** | p99 Latency | **20.88 µs** | $\le 50.00\text{ µs}$ | <span style="color:green;font-weight:bold;">PASSED</span> |
-| **Security Firewall** | False Positive Rate | **0.00%** (0 / 2,500 benign) | $\le 2.00\%$ | <span style="color:green;font-weight:bold;">PASSED</span> |
-| **GARAK Red-Teaming** | Obfuscated Exploit Block Rate | **99.20%** | $\ge 98.00\%$ | <span style="color:green;font-weight:bold;">PASSED</span> |
-| **Prompt Caching** | Turn 2 Token Savings Ratio | **50.56%** | $\ge 50.00\%$ | <span style="color:green;font-weight:bold;">PASSED</span> |
+| **AST Scan Latency** | Median Latency | **13.90 µs** | $\le 15.00\text{ µs}$ | PASSED |
+| **AST Scan Latency** | p99 Latency | **20.88 µs** | $\le 50.00\text{ µs}$ | PASSED |
+| **Security Firewall** | False Positive Rate | **0.00%** (0 / 2,500 benign) | $\le 2.00\%$ | PASSED |
+| **GARAK Red-Teaming** | Obfuscated Exploit Block Rate | **99.20%** | $\ge 98.00\%$ | PASSED |
+| **Prompt Caching** | Turn 2 Token Savings Ratio | **50.56%** | $\ge 50.00\%$ | PASSED |
 
 ---
 
-## 🛠️ Low-Level OS & Kernel Technical Mechanics
+## Low-Level OS & Kernel Technical Mechanics
 
 ### 1. Linux Seccomp-BPF System Call Filtering (`syscall_sandbox.py`)
 Standard application-level security checks fail when an attacker uses command injection to execute raw binaries (`nc -e /bin/sh`).
@@ -76,7 +76,7 @@ resource.setrlimit(resource.RLIMIT_NPROC, (32, 32))    # Max 32 child processes 
 
 ---
 
-## 📂 Repository Structure
+## Repository Structure
 
 ```yaml
 agentsentry/
@@ -99,7 +99,7 @@ agentsentry/
 
 ---
 
-## 🚀 Testing & Verification
+## Testing & Verification
 
 Execute the complete test suite (11/11 passing):
 
