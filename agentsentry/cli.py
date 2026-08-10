@@ -5,6 +5,7 @@ import logging
 
 from agentsentry.config import AgentSentryConfig
 from agentsentry.gateway import AgentSentryGateway, create_app
+from agentsentry.scanner.engine import ScanEngine
 
 logger = logging.getLogger("AgentSentry.CLI")
 
@@ -24,7 +25,7 @@ def run_start(args):
     gateway = AgentSentryGateway(config, trace_file, is_replay_mode=replay)
     app = create_app(gateway)
     
-    uvicorn.run(app, host=host, port=port, loop="uvloop")
+    uvicorn.run(app, host=host, port=port)
 
 def run_init(args):
     """
@@ -39,13 +40,31 @@ def run_benchmark(args):
     """
     Trigger the verification test harness.
     """
-    # Import the benchmark runner execution segment dynamically
     try:
         from harness.run_benchmarks import main as run_test
         print("Starting AgentSentry verification benchmarks...")
         run_test()
     except Exception as e:
         print(f"Failed to execute verification benchmark harness: {str(e)}")
+        sys.exit(1)
+
+def run_scan(args):
+    """
+    Triggers static security scanning across Cursor, Windsurf, Copilot, and MCP configs.
+    """
+    target_path = args.path
+    out_format = args.format
+    
+    engine = ScanEngine()
+    reporter = engine.scan(target_path)
+    
+    if out_format == "json":
+        print(reporter.to_json())
+    else:
+        reporter.print_console()
+        
+    summary = reporter.generate_summary()
+    if summary["critical"] > 0:
         sys.exit(1)
 
 def main():
@@ -69,6 +88,11 @@ def main():
     # Benchmark subcommand
     subparsers.add_parser("benchmark", help="Triggers verification benchmark harness checks")
 
+    # Scan subcommand
+    scan_parser = subparsers.add_parser("scan", help="Scans Agent configs (.cursor, .windsurfrules, .mcp.json, copilot)")
+    scan_parser.add_argument("--path", type=str, default=".", help="Target directory path to scan")
+    scan_parser.add_argument("--format", type=str, choices=["console", "json"], default="console", help="Output format (console/json)")
+
     args = parser.parse_args()
 
     if args.command == "start":
@@ -77,6 +101,8 @@ def main():
         run_init(args)
     elif args.command == "benchmark":
         run_benchmark(args)
+    elif args.command == "scan":
+        run_scan(args)
     else:
         parser.print_help()
 
