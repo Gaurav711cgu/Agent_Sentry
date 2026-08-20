@@ -1,19 +1,20 @@
 """
-AgentSentry Linux seccomp-bpf System Call Sandbox.
-Enforces OS kernel-level system call filtering to restrict executed agent sub-processes.
-Allowlists safe IO syscalls (read, write, close, exit_group) while blocking hazardous
-syscalls (execve, socket, open, fork, clone). Provides graceful fallback on non-Linux platforms.
+AgentSentry Process Isolation & Syscall Gate.
+Enforces POSIX process isolation and privilege restriction:
+- Sets PR_SET_NO_NEW_PRIVS on Linux to prevent privilege escalation via setuid
+- Applies rlimit memory and CPU boundaries via ResourceGuard
+- Inspects command invocations against blocked binary and reverse shell patterns
 """
 
 import ctypes
 import os
 import sys
 import logging
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Optional
 
 logger = logging.getLogger(__name__)
 
-# Standard Linux syscall numbers (x86_64)
+# Standard Linux syscall mapping for policy accounting
 LINUX_ALLOWED_SYSCALLS: Dict[int, str] = {
     0: "read",
     1: "write",
@@ -37,49 +38,48 @@ LINUX_BLOCKED_SYSCALLS: Dict[int, str] = {
 
 class SeccompSandbox:
     """
-    Linux seccomp-bpf system call filter wrapper.
-    Restricts agent sub-processes at the Linux kernel level.
+    Process isolation and privilege restriction sandbox.
+    Enforces no-new-privileges flags on Linux and validates syscall invocations.
     """
 
     def __init__(self, allowed_syscalls: Optional[Set[int]] = None):
         self.allowed_syscalls = allowed_syscalls or set(LINUX_ALLOWED_SYSCALLS.keys())
         self.is_linux = sys.platform.startswith("linux")
 
-    def apply_sandbox() -> bool:
+    def apply_sandbox(self) -> bool:
         """
-        Installs the seccomp-bpf BPF filter on Linux via prctl(PR_SET_SECCOMP).
-        On non-Linux platforms (e.g. macOS), logs isolation mode and returns True fallback.
+        Enforces PR_SET_NO_NEW_PRIVS to ensure child processes cannot escalate privileges.
+        Falls back cleanly on non-Linux POSIX platforms.
         """
         if not self.is_linux:
-            logger.info(f"Platform {sys.platform} detected: Using POSIX process-level sandbox fallback.")
+            logger.info(f"Platform {sys.platform} detected: Using POSIX process-level sandbox policy.")
             return True
 
         PR_SET_NO_NEW_PRIVS = 38
-        PR_SET_SECCOMP = 22
-        SECCOMP_MODE_FILTER = 2
-
         try:
             libc = ctypes.CDLL(None)
-
-            # 1. Prevent child process from gaining new privileges via setuid binaries
             res = libc.prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)
             if res != 0:
                 logger.error("Failed to set PR_SET_NO_NEW_PRIVS")
                 return False
-
-            logger.info("Seccomp BPF filter applied successfully.")
+            logger.info("Process sandbox privilege lock (PR_SET_NO_NEW_PRIVS) applied.")
             return True
         except Exception as e:
-            logger.error(f"Seccomp sandbox application error: {e}")
+            logger.error(f"Sandbox application error: {e}")
             return False
 
     def validate_command_syscalls(self, command: str) -> bool:
         """
-        Inspects raw command strings for attempts to invoke blocked binary system calls.
+        Inspects command strings for attempts to invoke blocked binaries, reverse shells, or socket redirects.
         """
-        dangerous_binaries = ["exec", "nc", "ncat", "netcat", "bash -i", "sh -i", "/dev/tcp", "curl", "wget"]
-        for db in dangerous_binaries:
-            if db in command.lower():
-                logger.warning(f"Blocked dangerous system binary call: {db}")
+        dangerous_patterns = [
+            "nc -e", "ncat -e", "netcat", "bash -i", "sh -i",
+            "/dev/tcp/", "/dev/udp/", "mkfifo /tmp", "telnet",
+            "| bash", "| sh", "| zsh", "curl ", "wget "
+        ]
+        cmd_lower = command.lower()
+        for dp in dangerous_patterns:
+            if dp in cmd_lower:
+                logger.warning(f"Blocked dangerous system pattern: {dp}")
                 return False
         return True

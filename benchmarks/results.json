@@ -1,0 +1,14 @@
+{
+  "timestamp": 1787238993.636935,
+  "iterations_per_suite": 5000,
+  "ast_analysis_us": {
+    "p50": 18.42,
+    "p95": 21.08,
+    "p99": 26.54
+  },
+  "command_firewall_us": {
+    "p50": 26.67,
+    "p95": 31.92,
+    "p99": 41.25
+  }
+}
