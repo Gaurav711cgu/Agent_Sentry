@@ -180,8 +180,8 @@ Key limitations (report these honestly):
 eval_output = {
     "cv_auc_mean": round(float(aucs.mean()), 4),
     "cv_auc_std":  round(float(aucs.std()), 4),
-    "cv_auc_ci_low":  round(float(aucs.mean() - 2*aucs.std()), 4),
-    "cv_auc_ci_high": round(float(aucs.mean() + 2*aucs.std()), 4),
+    "cv_auc_ci_low":  round(max(float(aucs.mean() - 2*aucs.std()), 0.0), 4),
+    "cv_auc_ci_high": round(min(float(aucs.mean() + 2*aucs.std()), 1.0), 4),
     "n_folds": 10,
     "evasion_accuracy": round(evasion_acc, 4),
     "evasion_misses": len(evasion_misses),
