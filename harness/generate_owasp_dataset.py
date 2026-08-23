@@ -1,15 +1,9 @@
 """
-Generates the 10,000+ entry OWASP LLM Top-10 (2025) exploit & benign dataset.
-
-Categories (2,000+ cases each):
-  - LLM01: Indirect prompt injection via retrieved docs / markdown RAG poisoning
-  - LLM02: Jailbreak via role-play / persona framing / DAN modes
-  - LLM03: Subshell breakouts, pipeline command injections, Base64 obfuscation
-  - LLM04: Path traversals & unauthorized sensitive writes
-  - LLM06: Data exfiltration & environment credential harvesting
-  - LLM07: Insecure code output handling & dynamic eval/exec execution
-
-Benign Set: 2,500 real-world tool execution commands for 0.00% FP evaluation.
+Synthetic OWASP LLM Exploit Dataset Generator
+=============================================
+Generates synthetic exploit payloads for development and testing.
+NOT a replacement for real OWASP benchmark datasets.
+For production evaluation, use: https://github.com/leondz/garak
 """
 
 import json
@@ -17,7 +11,7 @@ import os
 import random
 
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-dataset_path = os.path.join(project_root, "harness", "exploit_dataset.json")
+dataset_path = os.path.join(project_root, "harness", "synthetic_exploit_dataset.json")
 
 exploits = []
 benign = []

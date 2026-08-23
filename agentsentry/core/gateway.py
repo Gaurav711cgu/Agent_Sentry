@@ -96,33 +96,33 @@ class AgentSentryGateway:
 
         return optimized_payload, overhead_ms
 
-    async def execute_llm_call_with_retry(self, provider: str, payload: Dict[str, Any], max_retries: int = 3) -> Dict[str, Any]:
+    async def execute_llm_call_with_retry(self, provider: str, payload: Dict[str, Any], llm_client: Any = None, max_retries: int = 3) -> Dict[str, Any]:
         """
-        Simulates an outgoing HTTP API call with exponential backoff and jitter.
+        Executes an outgoing LLM API call with exponential backoff and jitter.
+        NOTE: This framework is designed to wrap real LLM calls for security and optimization.
         Provides a secondary fallback endpoint if the primary provider times out.
         """
+        if llm_client is None:
+            raise RuntimeError('LLM client not configured. Set OPENAI_API_KEY or pass llm_client.')
+
         target_provider = provider
         base_delay = 1.0
         
         for attempt in range(max_retries + 1):
             try:
-                await asyncio.sleep(0.01)
-                if random.random() < 0.15 and attempt < max_retries:
-                    self.telemetry["retry_attempts"] += 1
-                    raise Exception("Rate limit reached (429 Too Many Requests)")
-
+                response = await llm_client.chat.completions.create(**payload)
                 return {
                     "status": "success",
                     "provider": target_provider,
                     "model": payload.get("model", "default-model"),
-                    "choices": [{"message": {"role": "assistant", "content": "Success output text"}}]
+                    "choices": response.choices
                 }
             except Exception as e:
                 if attempt == max_retries:
                     self.telemetry["failed_calls"] += 1
                     fallback = "openai" if target_provider == "anthropic" else "anthropic"
                     logger.warning(f"Primary provider {target_provider} failed. Routing failover fallback to: {fallback}")
-                    return await self.execute_llm_call_with_retry(fallback, payload, max_retries=1)
+                    return await self.execute_llm_call_with_retry(fallback, payload, llm_client=llm_client, max_retries=1)
 
                 jitter = random.uniform(0, 0.5)
                 delay = (base_delay * (2 ** attempt)) + jitter

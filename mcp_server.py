@@ -109,7 +109,7 @@ async def align_prompt(params: AlignPromptParams) -> Dict[str, Any]:
     return {
         "success": True,
         "aligned_prompt": aligned_prompt,
-        "estimated_token_savings_pct": 50.56,
+        "estimated_token_savings_pct": "Run benchmark to measure",
         "prefix_hash_hit": True
     }
 
