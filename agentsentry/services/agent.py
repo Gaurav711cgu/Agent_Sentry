@@ -49,63 +49,31 @@ class DevSecOpsSentinelAgent:
 
         logger.info(f"Vulnerability audit completed. Static Score: {static_score}/10")
         
-        # Step 3: Trigger dynamic testing sandbox via AgentSentry if command is found
+        # Step 3: Autonomous shell execution of LLM-generated commands is eliminated
+        # to prevent prompt-injection remote code execution.
         sandbox_logs = None
-        sandbox_success = True
-        security_deflection = False
 
         if test_command:
-            logger.info(f"Dynamic testing instruction found: '{test_command}'. Initiating sandbox...")
-            try:
-                from agentsentry.core import state
-                import asyncio
-                
-                gateway = state.gateway_instance
-                if gateway:
-                    loop = asyncio.get_event_loop()
-                    is_safe, ret_code, stdout, stderr = await loop.run_in_executor(
-                        None, gateway.firewall.execute_safely, test_command
-                    )
-                    
-                    sandbox_logs = {
-                        "status": "blocked" if not is_safe else "executed",
-                        "return_code": ret_code,
-                        "stdout": stdout,
-                        "stderr": stderr,
-                        "reason": stderr if not is_safe else ""
-                    }
-                    
-                    if not is_safe:
-                        security_deflection = True
-                        sandbox_success = False
-                        logger.warning(f"SECURITY DEFLECTION: AgentSentry blocked script payload: {stderr}")
-                    elif ret_code != 0:
-                        sandbox_success = False
-                        logger.warning(f"Sandbox tests failed with return code: {ret_code}")
-                    else:
-                        logger.info("Sandbox verification command executed successfully.")
-                else:
-                    logger.error("AgentSentry gateway not initialized.")
-                    sandbox_success = False
-            except Exception as e:
-                logger.error(f"Error executing command in sandbox: {str(e)}")
-                sandbox_success = False
+            logger.info(
+                f"Verification command suggested: '{test_command}'. "
+                "Autonomous shell execution of LLM-generated commands is disabled for sandbox hardening. "
+                "Manual human engineer verification required."
+            )
+            sandbox_logs = {
+                "status": "manual_verification_required",
+                "command": test_command,
+                "reason": "Autonomous shell execution of LLM output disabled per FAANG L5 security policy."
+            }
         else:
             logger.info("No test script execution instructions found. Skipping dynamic verification phase.")
 
         # Step 4: Compile findings and post review
-        decision = "APPROVED"
-        reason = "All validation criteria passed."
-
         if static_score < 7.5:
             decision = "REJECTED"
-            reason = f"Static security audit score {static_score}/10 is below compliance threshold."
-        elif security_deflection:
-            decision = "REJECTED"
-            reason = "Security injection vulnerability detected and blocked during dynamic sandbox execution checks."
-        elif not sandbox_success:
-            decision = "REJECTED"
-            reason = "Verification tests failed during dynamic container execution checks."
+            reason = f"Static security audit score {static_score}/10 is below compliance threshold (7.5/10)."
+        else:
+            decision = "APPROVED (Human Approval Required)"
+            reason = "Static code security review passed. Human approval required before merge."
 
         logger.info(f"Validation Decision: {decision}. Reason: {reason}")
 
@@ -139,9 +107,9 @@ class DevSecOpsSentinelAgent:
         )
         await self.gitlab_mcp.post_mr_discussion(project_id, mr_iid, report_md)
 
-        # Merge MR autonomously if approved
-        if decision == "APPROVED":
-            logger.info(f"Auto-merging Merge Request {mr_iid}...")
-            await self.gitlab_mcp.accept_merge_request(project_id, mr_iid)
-        else:
-            logger.info(f"Merge Request {mr_iid} blocks merge due to compliance validation failure.")
+        # Autonomous auto-merge is eliminated per FAANG L5 security policy.
+        # All merge actions strictly require human approval.
+        logger.info(
+            f"Merge Request {mr_iid} review complete (Decision: {decision}). "
+            "Autonomous auto-merge disabled: Human approval required for any merge actions."
+        )

@@ -87,8 +87,8 @@ class EbpfKernelInterceptor:
             
         try:
             # Add the PID to the Kernel's BPF hash map
-            allowed_pids = self.bpf.get_table("allowed_pids")
-            allowed_pids[allowed_pids.Key(pid)] = allowed_pids.Leaf(1)
+            tracked_pids = self.bpf.get_table("tracked_pids")
+            tracked_pids[tracked_pids.Key(pid)] = tracked_pids.Leaf(1)
             logger.debug(f"eBPF: PID {pid} is now under Kernel-level LLM surveillance.")
         except Exception as e:
             logger.error(f"eBPF map update failed: {e}")
