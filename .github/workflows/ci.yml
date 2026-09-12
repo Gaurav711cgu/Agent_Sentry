@@ -24,7 +24,7 @@ jobs:
           pip install -e ".[dev]" pytest
       - name: Run Pytest suite
         run: |
-          pytest tests/ -v
+          PYTHONPATH=. pip install httpx starlette && PYTHONPATH=. pytest tests/ -v
       - name: Self-scan Gate (AgentSentry static scan)
         run: |
           python -m agentsentry.cli scan --path . --format json > self_scan.json
